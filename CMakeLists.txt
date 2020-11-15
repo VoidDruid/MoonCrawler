@@ -4,10 +4,16 @@ project(MoonCrawler)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+FILE(GLOB_RECURSE Sources src/*.cpp)
+FILE(GLOB_RECURSE QtUIs ui/*.ui)
+FILE(GLOB_RECURSE QtResources resources/*.qrc)
 add_executable(
-    MoonCrawler
-    main.cpp
+        MoonCrawler
+        ${Sources}
+        ${QtUIs}
+        ${QtResources}
 )
+target_include_directories(MoonCrawler PRIVATE include)
 
 # SFML
 find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
@@ -19,3 +25,4 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
 target_link_libraries(MoonCrawler Qt5::Widgets)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
