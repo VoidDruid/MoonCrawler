@@ -12,7 +12,7 @@ add_executable(
         ${Sources}
         ${QtUIs}
         ${QtResources}
-        include/NetworkManager.h include/Event.h src/Event.cpp src/GameManager.cpp src/NetworkManager.cpp include/Listener.h)
+)
 target_include_directories(MoonCrawler PRIVATE include)
 
 # SFML
