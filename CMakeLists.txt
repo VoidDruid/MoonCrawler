@@ -12,7 +12,7 @@ add_executable(
         ${Sources}
         ${QtUIs}
         ${QtResources}
-)
+        include/NetworkManager.h include/Event.h src/Event.cpp src/GameManager.cpp src/NetworkManager.cpp include/Listener.h)
 target_include_directories(MoonCrawler PRIVATE include)
 
 # SFML
@@ -26,3 +26,7 @@ target_link_libraries(MoonCrawler Qt5::Widgets)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
+
+# JSON
+find_package(nlohmann_json 3.2.0 REQUIRED)
+target_link_libraries(MoonCrawler nlohmann_json::nlohmann_json)
