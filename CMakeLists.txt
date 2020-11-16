@@ -26,3 +26,7 @@ target_link_libraries(MoonCrawler Qt5::Widgets)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
+
+# JSON
+find_package(nlohmann_json 3.2.0 REQUIRED)
+target_link_libraries(MoonCrawler nlohmann_json::nlohmann_json)
