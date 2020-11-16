@@ -17,8 +17,8 @@ int main(int argc, char* argv[]) {
 
     auto gameManager = std::make_shared<GameManager>();
     auto networkManager = std::make_shared<NetworkManager>();
-    networkManager->AddListener(gameManager);
-    networkManager->Run();
+    networkManager->addListener(gameManager);
+    networkManager->run();
 
     return QApplication::exec();
 }

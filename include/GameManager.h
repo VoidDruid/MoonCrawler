@@ -9,7 +9,7 @@ public:
     GameManager() = default;
     GameManager(const GameManager&) = delete;
     GameManager& operator=(const GameManager&) = delete;
-    void OnEvent(Event& event) override;
+    void onEvent(Event& event) override;
 private:
 };
 }

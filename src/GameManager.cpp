@@ -5,7 +5,7 @@
 
 using namespace MoonCrawler;
 
-void GameManager::OnEvent(Event& event) {
-    std::cout << "OnEvent: " << event << std::endl;
-    event.MarkStale();
+void GameManager::onEvent(Event& event) {
+    std::cout << "onEvent: " << event << std::endl;
+    event.markStale();
 }

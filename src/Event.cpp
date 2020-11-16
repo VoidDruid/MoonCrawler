@@ -28,18 +28,18 @@ Event::Event(Event&& event) noexcept
     , m_status{event.m_status}
 {}
 
-Event::EventDataType Event::GetData() const {
+Event::EventDataType Event::getData() const {
     return m_data;
 }
-EventType Event::GetEventType() const {
+EventType Event::getEventType() const {
     return m_type;
 }
 
-EventStatus Event::GetEventStatus() const {
+EventStatus Event::getEventStatus() const {
     return m_status;
 }
 
-void Event::MarkStale() {
+void Event::markStale() {
     m_status = EventStatus::Stale;
 }
 
@@ -70,17 +70,20 @@ std::ostream& operator<<(std::ostream& out, const EventStatus& eventStatus) {
         case EventStatus::Stale:
             out << "Stale";
             break;
+        case EventStatus::New:
+            out << "New";
+            break;
     }
     return out;
 }
 
 std::ostream& operator<<(std::ostream& out, const Event& event) {
-    out<< "Event data: "
-       << *event.GetData()
-       << ", Event type: "
-       << event.GetEventType()
-       << ", Event status: "
-       << event.GetEventStatus() << std::endl;
+    out << "Event data: "
+        << *event.getData()
+        << ", Event type: "
+        << event.getEventType()
+        << ", Event status: "
+        << event.getEventStatus() << std::endl;
     return out;
 }
 }

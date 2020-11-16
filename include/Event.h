@@ -15,6 +15,7 @@ enum class EventType {
 
 enum class EventStatus {
     Unknown,
+    New,
     Stale
 };
 
@@ -28,10 +29,10 @@ public:
     Event(const nlohmann::json& eventData, EventType eventType, EventStatus status);
     Event(nlohmann::json&& eventData, EventType&& eventType, EventStatus&& status) noexcept;
 
-    [[nodiscard]] EventDataType GetData() const;
-    [[nodiscard]] EventType GetEventType() const;
-    [[nodiscard]] EventStatus GetEventStatus() const;
-    void MarkStale();
+    [[nodiscard]] EventDataType getData() const;
+    [[nodiscard]] EventType getEventType() const;
+    [[nodiscard]] EventStatus getEventStatus() const;
+    void markStale();
 
     friend std::ostream& operator<<(std::ostream& out, const EventType& eventType);
 private:

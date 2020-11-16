@@ -5,6 +5,6 @@
 namespace MoonCrawler {
 class Listener {
 public:
-    virtual void OnEvent(Event& event) = 0;
+    virtual void onEvent(Event& event) = 0;
 };
 }
