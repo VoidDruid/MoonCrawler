@@ -37,10 +37,15 @@ void NetworkManager::sendData(const Event &data) {
 
 void NetworkManager::onDataReceivedCallback(void *self, const char *data) {
     auto* myself = (NetworkManager*)self;
+    std::stringstream stream{};
+    int eventType{};
+    stream << data[0];
+    stream >> eventType;
     Event event{
-            data,
-            EventType::GameEvent,
+            data+1,
+            EventType(eventType),
             EventStatus::New};
+
     myself->onDataReceived(event);
 
 }

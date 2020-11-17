@@ -16,40 +16,31 @@ int main(int argc, char* argv[]) {
     label->setText("<font color=red>Hello, World!</font>");
     dialog->show();
 
-    auto gameManager = std::make_shared<GameManager>();
-    auto networkManager = std::make_shared<NetworkManager>();
-    networkManager->addListener(gameManager);
-    networkManager->init();
-    networkManager->run();
-    std::this_thread::sleep_for(std::chrono::seconds(5));
-    auto data = R"({"game_state" : "start"})"_json;
-    Event event{
-            data,
-            EventType::GameEvent,
-            EventStatus::New};
-    while(true) {
-        int a = 10;
-        std::cout << "here" << std::endl;
-        std::cin >> a;
-        std::cout << "here2" << std::endl;
-        if(a == 200) {
-            std::cout << "here3" << std::endl;
-            std::string data2;
-            std::cin >> data2;
-            networkManager->sendData(event);
-            std::cout << "here4" << std::endl;
+    auto networkLayer = []() {
+        auto gameManager = std::make_shared<GameManager>();
+        auto networkManager = std::make_shared<NetworkManager>();
+        networkManager->addListener(gameManager);
+        networkManager->init();
+        networkManager->run();
+        auto data = R"({"game_state" : "start"})"_json;
+        Event event{
+                data,
+                EventType::GameEvent,
+                EventStatus::New};
+        while(true) {
+            int a{};
+            std::cin >> a;
+            if (a == 200) {
+                networkManager->sendData(event);
+            }
+            if (a == 1) {
+                break;
+            }
         }
-        if(a == 1) {
-            break;
-        }
-    }
+    };
 
-    //NetworkLinuxPAL pal;
-    //pal.initServer("ss", 9999);
+    std::thread network(networkLayer);
+    network.detach();
 
-    /*if(pal.isConnected()) {
-        pal.sendData();
-    }*/
-
-    //return QApplication::exec();
+    return QApplication::exec();
 }

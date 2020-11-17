@@ -1,7 +1,14 @@
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <iostream>
+#include <cstdlib>
+#include <cstdio>
+#include <unistd.h>
+#include <cstring>
+
 #include "NetworkLinuxPAL.h"
 
 using namespace MoonCrawler;
-#include <string>
 void NetworkLinuxPAL::sendData(const char* data) const {
     if(not m_isInitialized) {
         return;
@@ -11,16 +18,13 @@ void NetworkLinuxPAL::sendData(const char* data) const {
     sendto(m_sockfd, (const char *)data, strlen(data),
            0, (const struct sockaddr *) &m_cliaddr,
            len);
-    printf("Hello message sent.\n");
 }
 
 void NetworkLinuxPAL::initServer(std::filesystem::path configFile) {
     //TODO
 }
-constexpr auto MAXLINE = 1024;
-void NetworkLinuxPAL::initServer(const std::string &host, unsigned short port) {
-    char buffer[MAXLINE];
 
+void NetworkLinuxPAL::initServer(const std::string &host, unsigned short port) {
     // Creating socket file descriptor
     if ((m_sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) {
         perror("socket creation failed");
@@ -45,18 +49,16 @@ void NetworkLinuxPAL::initServer(const std::string &host, unsigned short port) {
 
     int len, n;
 
-    len = sizeof(m_cliaddr);  //len is value/resuslt
+    len = sizeof(m_cliaddr);
     m_isInitialized = true;
     m_isConnected = true;
     while(true) {
-        n = recvfrom(m_sockfd, (char *) buffer, MAXLINE,
+        n = recvfrom(m_sockfd, (char *) m_buffer.data(), MAX_BUFFER_SIZE,
                      MSG_WAITALL, (struct sockaddr *) &m_cliaddr,
                      reinterpret_cast<socklen_t *>(&len));
-        buffer[n] = '\0';
-        printf("Client : %s\n", buffer);
-        m_callback(m_instance, buffer);
+        m_buffer[n] = '\0';
+        m_callback(m_instance, m_buffer.data());
         if(n == 0) {
-            printf("Client disconnected\n");
             break;
         }
     }
@@ -67,11 +69,7 @@ void NetworkLinuxPAL::initClient(std::filesystem::path configFile) {
 }
 
 void NetworkLinuxPAL::initClient(const std::string &host, uint64_t port) {
-
-}
-
-bool NetworkLinuxPAL::isConnected() const {
-    return m_isConnected;
+    //TODO
 }
 
 void NetworkLinuxPAL::setReceiveCallback(void *instance, INetworkPAL::DataReceiveCallback callback) {
