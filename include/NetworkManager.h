@@ -12,10 +12,11 @@ public:
     NetworkManager();
     void init();
     void addListener(const std::shared_ptr<Listener>& listener);
-    void run();
+    void startServer();
+    void startClient();
     void sendData(const Event& data);
 private:
-    void startPAL();
+    void startPAL(bool isServer);
     static void onDataReceivedCallback(void* self, const char* data);
     void onDataReceived(Event& event);
 

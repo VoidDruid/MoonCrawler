@@ -5,6 +5,11 @@
 #include <netinet/in.h>
 
 namespace MoonCrawler {
+enum class State {
+    Client,
+    Server
+};
+
 class NetworkLinuxPAL : public INetworkPAL {
     public:
     void initServer(std::filesystem::path configFile) override;
@@ -14,6 +19,7 @@ class NetworkLinuxPAL : public INetworkPAL {
     void sendData(const char* data) const override;
     void setReceiveCallback(void* instance, DataReceiveCallback callback) override;
 
+    ~NetworkLinuxPAL();
     private:
     int m_sockfd{};
     bool m_isInitialized{false};
@@ -23,5 +29,7 @@ class NetworkLinuxPAL : public INetworkPAL {
     std::array<char, MAX_BUFFER_SIZE> m_buffer{};
     DataReceiveCallback m_callback{};
     void* m_instance{};
+
+    State m_state{};
 };
 }

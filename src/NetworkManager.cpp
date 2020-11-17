@@ -21,17 +21,21 @@ void NetworkManager::init() {
 void NetworkManager::addListener(const std::shared_ptr<Listener>& listener) {
     m_listeners.push_back(listener);
 }
-void NetworkManager::run() {
-    std::thread t1(&NetworkManager::startPAL, this);
-    t1.detach();
+
+void NetworkManager::startPAL(bool isServer) {
+    if(isServer) {
+        m_networkPAL->initServer("ss", 9999);
+    }
+    else {
+        m_networkPAL->initClient("ss", 9999);
+    }
 }
-void NetworkManager::startPAL() {
-    m_networkPAL->initServer("ss", 9999);
-}
+#include <iostream>
 
 void NetworkManager::sendData(const Event &data) {
     std::stringstream stream;
-    stream << *data.getData();
+    int type = static_cast<int>(data.getEventType());
+    stream << type << *data.getData();
     m_networkPAL->sendData(stream.str().c_str());
 }
 
@@ -55,4 +59,14 @@ void NetworkManager::onDataReceived(Event& event) {
         listener->onEvent(event);
     }
 
+}
+
+void NetworkManager::startServer() {
+    std::thread t1(&NetworkManager::startPAL, this, true);
+    t1.detach();
+}
+
+void NetworkManager::startClient() {
+    std::thread t1(&NetworkManager::startPAL, this, false);
+    t1.detach();
 }

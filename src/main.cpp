@@ -16,12 +16,19 @@ int main(int argc, char* argv[]) {
     label->setText("<font color=red>Hello, World!</font>");
     dialog->show();
 
-    auto networkLayer = []() {
+    auto networkLayer = [argv]() {
         auto gameManager = std::make_shared<GameManager>();
         auto networkManager = std::make_shared<NetworkManager>();
         networkManager->addListener(gameManager);
         networkManager->init();
-        networkManager->run();
+        if(std::strcmp(argv[1],"client") == 0) {
+            networkManager->startClient();
+        }
+
+        if(std::strcmp(argv[1],"server") == 0) {
+            networkManager->startServer();
+        }
+
         auto data = R"({"game_state" : "start"})"_json;
         Event event{
                 data,
