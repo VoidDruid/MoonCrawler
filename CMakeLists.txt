@@ -12,7 +12,7 @@ add_executable(
         ${Sources}
         ${QtUIs}
         ${QtResources}
-        include/NetworkPAL/NetworkLinuxPAL.cpp include/NetworkPAL/NetworkLinuxPAL.h)
+)
 target_include_directories(MoonCrawler PRIVATE include)
 
 # SFML
