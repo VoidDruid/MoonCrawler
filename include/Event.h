@@ -6,7 +6,7 @@
 #include <ostream>
 
 namespace MoonCrawler {
-enum class EventType {
+enum class EventType : uint8_t {
     Unknown,
     IOEvent,
     NetworkEvent,
