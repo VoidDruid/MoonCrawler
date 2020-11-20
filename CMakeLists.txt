@@ -13,7 +13,7 @@ add_executable(
         ${QtUIs}
         ${QtResources}
 )
-target_include_directories(MoonCrawler PRIVATE include)
+target_include_directories(MoonCrawler PRIVATE src)
 
 # SFML
 find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
