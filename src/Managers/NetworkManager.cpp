@@ -1,7 +1,7 @@
 #pragma once
 
 #include "NetworkManager.h"
-#include "GameManager.h"
+#include "src/Managers/GameManager.h"
 #include "Event.h"
 #include "NetworkPAL/NetworkLinuxPAL.h"
 
@@ -30,9 +30,8 @@ void NetworkManager::startPAL(bool isServer) {
         m_networkPAL->initClient("ss", 9999);
     }
 }
-#include <iostream>
 
-void NetworkManager::sendData(const Event &data) {
+void NetworkManager::sendEvent(const Event &data) {
     std::stringstream stream;
     int type = static_cast<int>(data.getEventType());
     stream << type << *data.getData();
@@ -55,10 +54,11 @@ void NetworkManager::onDataReceivedCallback(void *self, const char *data) {
 }
 
 void NetworkManager::onDataReceived(Event& event) {
-    for(auto& listener : m_listeners) {
-        listener->onEvent(event);
+    for(auto& weakListener : m_listeners) {
+        if(auto listener = weakListener.lock()) {
+            listener->onEvent(event);
+        }
     }
-
 }
 
 void NetworkManager::startServer() {
@@ -69,4 +69,20 @@ void NetworkManager::startServer() {
 void NetworkManager::startClient() {
     std::thread t1(&NetworkManager::startPAL, this, false);
     t1.detach();
+}
+
+void NetworkManager::onEvent(Event &event) {
+    auto eventData = *event.getData();
+    if(eventData["gameState"] == "start") {
+        if(eventData["isHost"] == true) {
+            startServer();
+        }
+        else {
+            startClient();
+        }
+    }
+}
+
+void NetworkManager::sendStartUpRequest() {
+    
 }
