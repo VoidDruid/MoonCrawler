@@ -1,5 +1,3 @@
-#pragma once
-
 #include "NetworkManager.h"
 #include "src/Managers/GameManager.h"
 #include "Event.h"
