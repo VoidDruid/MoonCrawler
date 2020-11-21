@@ -13,6 +13,7 @@ void NetworkLinuxPAL::sendData(const char* data) const {
     if(not m_isInitialized) {
         return;
     }
+    std::cout << "[NetworkLinuxPAL] sendData: " << data << std::endl;
     switch(m_state) {
         case State::Client:
             sendto(m_sockfd, (const char *) data, strlen(data),
@@ -68,6 +69,7 @@ void NetworkLinuxPAL::initServer(const std::string &host, unsigned short port) {
                      reinterpret_cast<socklen_t *>(&len));
         m_buffer[n] = '\0';
         m_callback(m_instance, m_buffer.data());
+        std::cout << "[NetworkLinuxPAL] received data: " << m_buffer.data() << std::endl;
         if(n == 0) {
             break;
         }
@@ -102,6 +104,7 @@ void NetworkLinuxPAL::initClient(const std::string &host, uint64_t port) {
                      reinterpret_cast<socklen_t *>(&len));
         m_buffer[n] = '\0';
         m_callback(m_instance, m_buffer.data());
+        std::cout << "[NetworkLinuxPAL] received data: " << m_buffer.data() << std::endl;
         if(n == 0) {
             break;
         }
@@ -115,4 +118,8 @@ void NetworkLinuxPAL::setReceiveCallback(void *instance, INetworkPAL::DataReceiv
 
 NetworkLinuxPAL::~NetworkLinuxPAL() {
     close(m_sockfd);
+}
+
+bool NetworkLinuxPAL::isConnected() const {
+    return m_isConnected;
 }

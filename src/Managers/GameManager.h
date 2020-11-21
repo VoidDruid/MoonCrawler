@@ -4,6 +4,7 @@
 #include "Subscriber.h"
 
 #include <list>
+#include <variant>
 
 namespace MoonCrawler {
 class Event;
@@ -18,6 +19,17 @@ public:
 
     void startGame(bool isHost);
 private:
+    void sendEvent(Event& event);
+
+    struct Initialized {};
+    struct Starting {};
+    struct Started {};
+    struct InGame {};
+    struct EndOfGame {};
+
+    std::variant<Initialized, Starting, Started, InGame, EndOfGame> m_state{Initialized{}};
     std::list<std::weak_ptr<Listener>> m_listeners{};
+
+    bool m_isHost{false};
 };
 }
