@@ -3,6 +3,7 @@
 #include "INetworkPAL.h"
 
 #include <netinet/in.h>
+#include <future>
 
 namespace MoonCrawler {
 enum class State {
@@ -19,8 +20,10 @@ class NetworkLinuxPAL : public INetworkPAL {
     void sendData(const char* data) const override;
     void setReceiveCallback(void* instance, DataReceiveCallback callback) override;
 
+    [[nodiscard]] bool isConnected() const override;
     ~NetworkLinuxPAL();
     private:
+    std::promise<bool> m_startPromise;
     int m_sockfd{};
     bool m_isInitialized{false};
     bool m_isConnected{false};

@@ -15,17 +15,17 @@ public:
     void addListener(const std::shared_ptr<Listener>& listener) override;
     void startServer();
     void startClient();
-    void sendEvent(const Event& data);
+    void sendEvent(Event& data);
     void onEvent(Event& event) override;
 private:
     void startPAL(bool isServer);
     static void onDataReceivedCallback(void* self, const char* data);
     void onDataReceived(Event& event);
 
-    void sendStartUpRequest();
+    void sendStartUpRequest(Event &event);
 
     std::list<std::weak_ptr<Listener>> m_listeners{};
     std::shared_ptr<INetworkPAL> m_networkPAL{nullptr};
-
+    bool m_isHost{false};
 };
 }
