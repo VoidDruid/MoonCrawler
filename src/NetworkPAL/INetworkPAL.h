@@ -16,5 +16,6 @@ class INetworkPAL {
     virtual void sendData(const char* data) const = 0;
     virtual void setReceiveCallback(void* instance, DataReceiveCallback callback) = 0;
     [[nodiscard]] virtual bool isConnected() const = 0;
+    virtual void shutdown() = 0;
 };
 }

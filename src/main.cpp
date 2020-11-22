@@ -28,5 +28,7 @@ int main(int argc, char **argv)
 
     auto canvas = mainWindow->getGameCanvas();
 
-    return QApplication::exec();
+    auto retVal =  QApplication::exec();
+    getNetworkManager()->shutdown();
+    return retVal;
 }

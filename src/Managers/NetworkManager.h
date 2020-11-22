@@ -18,7 +18,8 @@ public:
     void startClient();
     void sendEvent(Event& data);
     void onEvent(Event& event) override;
-    ~NetworkManager() = default;
+    ~NetworkManager() override = default;
+    void shutdown();
 private:
     void startPAL(bool isServer);
     static void onDataReceivedCallback(void* self, const char* data);

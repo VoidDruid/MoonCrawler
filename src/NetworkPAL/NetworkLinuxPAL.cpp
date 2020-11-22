@@ -5,6 +5,7 @@
 #include <cstdio>
 #include <unistd.h>
 #include <cstring>
+#include <mutex>
 
 #include "NetworkLinuxPAL.h"
 
@@ -35,6 +36,10 @@ void NetworkLinuxPAL::initServer(std::filesystem::path configFile) {
 }
 
 void NetworkLinuxPAL::initServer(const std::string &host, unsigned short port) {
+    {
+        std::lock_guard<std::mutex> lock(m_shutdownMutex);
+        m_isRunning = true;
+    }
     // Creating socket file descriptor
     m_state = State::Server;
     if ((m_sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) {
@@ -64,6 +69,12 @@ void NetworkLinuxPAL::initServer(const std::string &host, unsigned short port) {
     m_isInitialized = true;
     m_isConnected = true;
     while(true) {
+        {
+            std::lock_guard<std::mutex> lock(m_shutdownMutex);
+            if(not m_isRunning) {
+                break;
+            }
+        }
         n = recvfrom(m_sockfd, (char *) m_buffer.data(), MAX_BUFFER_SIZE,
                      MSG_WAITALL, (struct sockaddr *) &m_cliaddr,
                      reinterpret_cast<socklen_t *>(&len));
@@ -81,6 +92,10 @@ void NetworkLinuxPAL::initClient(std::filesystem::path configFile) {
 }
 
 void NetworkLinuxPAL::initClient(const std::string &host, uint64_t port) {
+    {
+        std::lock_guard<std::mutex> lock(m_shutdownMutex);
+        m_isRunning = true;
+    }
     m_state = State::Client;
     // Creating socket file descriptor
     if ((m_sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) {
@@ -98,6 +113,12 @@ void NetworkLinuxPAL::initClient(const std::string &host, uint64_t port) {
     m_isInitialized = true;
     m_isConnected = true;
     while(true) {
+        {
+            std::lock_guard<std::mutex> lock(m_shutdownMutex);
+            if(not m_isRunning) {
+                break;
+            }
+        }
         int n, len;
         n = recvfrom(m_sockfd, (char *) m_buffer.data(), MAX_BUFFER_SIZE,
                      MSG_WAITALL, (struct sockaddr *) &m_servaddr,
@@ -122,4 +143,9 @@ NetworkLinuxPAL::~NetworkLinuxPAL() {
 
 bool NetworkLinuxPAL::isConnected() const {
     return m_isConnected;
+}
+
+void NetworkLinuxPAL::shutdown() {
+    std::lock_guard<std::mutex> lock(m_shutdownMutex);
+    m_isRunning = false;
 }

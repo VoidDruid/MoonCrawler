@@ -42,20 +42,25 @@ void NetworkManager::sendEvent(Event &data) {
 }
 
 void NetworkManager::onDataReceivedCallback(void *self, const char *data) {
-    auto* myself = (NetworkManager*)self;
-    std::stringstream stream{};
-    int eventType{};
-    stream << data[0];
-    stream >> eventType;
-    Event event{
-            nlohmann::json::parse(data+1),
-            EventType(eventType),
-            EventStatus::New};
-    auto& eventData = *event.getData();
-    eventData["isRemote"] = true;
+    try {
+        auto *myself = static_cast<NetworkManager *>(self);
+        std::stringstream stream{};
+        int eventType{};
+        stream << data[0];
+        stream >> eventType;
 
-    myself->onDataReceived(event);
+        Event event{
+                nlohmann::json::parse(data + 1),
+                EventType(eventType),
+                EventStatus::New};
+        auto &eventData = *event.getData();
+        eventData["isRemote"] = true;
 
+        myself->onDataReceived(event);
+    }
+    catch(nlohmann::detail::parse_error& exc) {
+        std::cerr << exc.what() << std::endl;
+    }
 }
 
 void NetworkManager::onDataReceived(Event& event) {
@@ -88,7 +93,7 @@ void NetworkManager::onEvent(Event &event) {
 
 void NetworkManager::sendStartUpRequest(Event &event) {
     std::weak_ptr<NetworkManager> weakSelf = shared_from_this();
-    auto startupRequest = [&event, weakSelf]() {
+    auto startupRequest = [event, weakSelf]() {
         if(auto strongSelf = weakSelf.lock()) {
             auto eventData = *event.getData();
             if (eventData["isHost"] == true) {
@@ -109,12 +114,17 @@ void NetworkManager::sendStartUpRequest(Event &event) {
                 std::cerr << "Error! Cannot connect to peer!" << std::endl;
             }
             std::cout << "Initialized!" << std::endl;
-            strongSelf->sendEvent(event);
+            Event event_ = *const_cast<Event*>(&event);
+            strongSelf->sendEvent(event_);
         }
     };
 
     std::thread startUpThread(startupRequest);
     startUpThread.detach();
+}
+
+void NetworkManager::shutdown() {
+    m_networkPAL->shutdown();
 }
 
 namespace MoonCrawler {

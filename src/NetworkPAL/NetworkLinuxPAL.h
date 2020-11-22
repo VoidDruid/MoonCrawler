@@ -22,6 +22,7 @@ class NetworkLinuxPAL : public INetworkPAL {
 
     [[nodiscard]] bool isConnected() const override;
     ~NetworkLinuxPAL();
+    void shutdown() override;
     private:
     std::promise<bool> m_startPromise;
     int m_sockfd{};
@@ -34,5 +35,7 @@ class NetworkLinuxPAL : public INetworkPAL {
     void* m_instance{};
 
     State m_state{};
+    bool m_isRunning{false};
+    mutable std::mutex m_shutdownMutex;
 };
 }
