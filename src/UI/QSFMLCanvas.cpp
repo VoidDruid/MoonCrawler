@@ -2,9 +2,11 @@
 #include <Qt/qx11info_x11.h>
 #include <X11/Xlib.h>
 #endif
-#include "ui/QSFMLCanvas.h"
+#include "UI/QSFMLCanvas.h"
 
 using namespace MoonCrawler;
+
+const int mSecPerFrame60 = 1000 / 60;
 
 QSFMLCanvas::QSFMLCanvas(QWidget* parent) :
     QWidget         (parent),
@@ -18,7 +20,7 @@ QSFMLCanvas::QSFMLCanvas(QWidget* parent) :
     // Set strong focus to enable keyboard events to be received
     setFocusPolicy(Qt::StrongFocus);
 
-    m_timer.setInterval(0);
+    m_timer.setInterval(mSecPerFrame60);
 }
 
 void QSFMLCanvas::setFrameTime(int frameTime) {

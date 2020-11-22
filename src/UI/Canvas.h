@@ -3,9 +3,9 @@
 #include "QSFMLCanvas.h"
 
 namespace MoonCrawler {
-class GameCanvas : public QSFMLCanvas {
+class Canvas : public QSFMLCanvas {
 public :
-    explicit GameCanvas(QWidget* Parent);
+    explicit Canvas(QWidget* Parent);
 private :
     void onInit() override;
     void onUpdate() override;

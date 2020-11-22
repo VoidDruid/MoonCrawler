@@ -58,5 +58,10 @@ void GameManager::sendEvent(Event& event) {
         }
     }
 }
-
+namespace MoonCrawler {
+std::shared_ptr<GameManager> getGameManager() {
+    static std::shared_ptr<GameManager> staticGameManager = std::make_shared<GameManager>();
+    return staticGameManager;
+}
+}
 

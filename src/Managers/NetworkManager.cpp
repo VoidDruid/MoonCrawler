@@ -87,25 +87,39 @@ void NetworkManager::onEvent(Event &event) {
 }
 
 void NetworkManager::sendStartUpRequest(Event &event) {
-    auto eventData = *event.getData();
-    if(eventData["isHost"] == true) {
-        startServer();
-    }
-    else {
-        startClient();
-    }
-    constexpr uint8_t MAX_RETRIES = 5;
-    uint8_t retry{};
+    std::weak_ptr<NetworkManager> weakSelf = shared_from_this();
+    auto startupRequest = [&event, weakSelf]() {
+        if(auto strongSelf = weakSelf.lock()) {
+            auto eventData = *event.getData();
+            if (eventData["isHost"] == true) {
+                strongSelf->startServer();
+            } else {
+                strongSelf->startClient();
+            }
+            constexpr uint8_t MAX_RETRIES = 6;
+            uint8_t retry{1};
 
-    while(!m_networkPAL->isConnected() && retry < MAX_RETRIES) {
-        std::cout << "Connectivity issue. Retry: " << (int)retry << std::endl;
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-        retry++;
-    }
+            while (!strongSelf->m_networkPAL->isConnected() && retry < MAX_RETRIES) {
+                std::cout << "Connectivity issue. Retry: " << (int) retry << std::endl;
+                std::this_thread::sleep_for(std::chrono::seconds(1*retry));
+                retry++;
+            }
 
-    if(retry == MAX_RETRIES) {
-        std::cerr << "Error! Cannot connect to peer!" << std::endl;
-    }
-    std::cout << "Initialized!" << std::endl;
-    sendEvent(event);
+            if (retry == MAX_RETRIES) {
+                std::cerr << "Error! Cannot connect to peer!" << std::endl;
+            }
+            std::cout << "Initialized!" << std::endl;
+            strongSelf->sendEvent(event);
+        }
+    };
+
+    std::thread startUpThread(startupRequest);
+    startUpThread.detach();
+}
+
+namespace MoonCrawler {
+std::shared_ptr<NetworkManager> getNetworkManager() {
+    static std::shared_ptr<NetworkManager> staticNetworkManager = std::make_shared<NetworkManager>();
+    return staticNetworkManager;
+}
 }

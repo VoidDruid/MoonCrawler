@@ -14,24 +14,69 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="gameView">
-   <widget class="MoonCrawler::GameCanvas" name="gameCanvas" native="true">
+   <widget class="MoonCrawler::Canvas" name="gameCanvas" native="true">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>0</y>
+      <width>641</width>
+      <height>571</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QWidget" name="verticalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>-1</x>
+      <y>249</y>
+      <width>161</width>
+      <height>321</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="gameSelectLayout">
+     <item>
+      <widget class="QPushButton" name="playButton">
+       <property name="text">
+        <string>Play</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="hostButton">
+       <property name="text">
+        <string>Host</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="verticalLayoutWidget_2">
     <property name="geometry">
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>801</width>
-      <height>571</height>
+      <width>160</width>
+      <height>251</height>
      </rect>
     </property>
+    <layout class="QVBoxLayout" name="gameStartLayout">
+     <item>
+      <widget class="QPushButton" name="startButton">
+       <property name="text">
+        <string>Start game</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>MoonCrawler::GameCanvas</class>
+   <class>MoonCrawler::Canvas</class>
    <extends>QWidget</extends>
-   <header>ui/GameCanvas.h</header>
+   <header>UI/Canvas.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

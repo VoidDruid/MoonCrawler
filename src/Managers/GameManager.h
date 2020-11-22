@@ -32,4 +32,6 @@ private:
 
     bool m_isHost{false};
 };
+
+std::shared_ptr<GameManager> getGameManager();
 }

@@ -1,49 +1,23 @@
-#include "ui/MainWindow.h"
-#include "Managers/GameManager.h"
-#include "Managers/NetworkManager.h"
+#include "UI/MainWindow.h"
 
-#include <tuple>
-#include <iostream>
+#include "Managers/NetworkManager.h"
+#include "Managers/GameManager.h"
 
 using namespace MoonCrawler;
-std::tuple<std::shared_ptr<GameManager>, std::shared_ptr<NetworkManager>>
-initManagers() {
-    auto gameManager = std::make_shared<GameManager>();
-    auto networkManager = std::make_shared<NetworkManager>();
+
+void initManagers() {
+    auto gameManager = getGameManager();
+    auto networkManager = getNetworkManager();
 
     gameManager->addListener(networkManager);
     networkManager->addListener(gameManager);
 
     networkManager->init();
-
-    return {gameManager, networkManager};
 }
 
-bool isHost(int argc, char **argv) {
-    if(argc < 2) {
-        std::cerr << "Provide configuration" << std::endl;
-        std::exit(1);
-    }
-    if(std::strcmp(argv[1], "client") == 0) {
-        return false;
-    }
-    else {
-        return true;
-    }
-
-}
 int main(int argc, char **argv)
 {
-    auto managers = initManagers();
-    auto& gameManager = std::get<std::shared_ptr<GameManager>>(managers);
-
-    auto startGame = [&gameManager, argv, argc]() {
-        gameManager->startGame(isHost(argc, argv));
-    };
-
-    std::thread gameThread(startGame);
-    gameThread.detach();
-
+    initManagers();
     QApplication app(argc, argv);
 
     auto mainWindow = new MoonCrawler::MainWindow();
