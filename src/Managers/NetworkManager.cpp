@@ -99,7 +99,7 @@ void NetworkManager::sendStartUpRequest(Event &event) {
 
     while(!m_networkPAL->isConnected() && retry < MAX_RETRIES) {
         std::cout << "Connectivity issue. Retry: " << (int)retry << std::endl;
-        std::this_thread::sleep_for(std::chrono::seconds(10));
+        std::this_thread::sleep_for(std::chrono::seconds(1));
         retry++;
     }
 
