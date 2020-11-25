@@ -20,19 +20,19 @@ void initManagers() {
     networkManager->init();
 }
 
-void updateHealthRegeneration(int64_t currentFrame, Healths& healths)
-{
-    if(currentFrame == 10)
+struct updateHealthRegeneration {
+    void operator()(EntityID id, Components& components)
     {
-        for(auto& [id, health] : healths)
-        {
-            if(health.current < health.max) {
-                ++health.current;
-                std::cerr << id << ":"<< health.current << std::endl;
-            }
+        auto& health = components.healths[id];
+        auto& position = components.positions[id];
+
+        if(health.current < health.max) {
+            ++health.current;
+            std::cerr << "id: " << id << ", health: "<< health.current << std::endl;
         }
     }
-}
+    static const unsigned char neededComponents = (hasHealth | hasPosition);
+};
 
 int main(int argc, char **argv)
 {
@@ -44,16 +44,21 @@ int main(int argc, char **argv)
     escManager->addComponent(newID, Position{0.0f, 0.0f});
     escManager->addComponent(newID, Health{100, 90});
 
+    escManager->addComponent(1, Position{0.0f, 0.0f});
+
     std::thread ecsThread([escManager](){
         while(true) {
-            updateHealthRegeneration(10, escManager->m_components.healths);
-            std::this_thread::sleep_for(std::chrono::seconds(1));
+            for(auto& [id, options] : escManager->entities) {
+                if(options == updateHealthRegeneration::neededComponents) {
+                    updateHealthRegeneration{}(id, escManager->m_components);
+                    std::this_thread::sleep_for(std::chrono::seconds(1));
+                }
+            }
         }
     });
     ecsThread.detach();
 
     std::this_thread::sleep_for(std::chrono::seconds(3));
-    escManager->removeComponent(newID, Health{});
 
     QApplication app(argc, argv);
 
