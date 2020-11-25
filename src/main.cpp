@@ -44,12 +44,20 @@ int main(int argc, char **argv)
     escManager->addComponent(newID, Position{0.0f, 0.0f});
     escManager->addComponent(newID, Health{100, 90});
 
+    escManager->addComponent(13, Position{0.0f, 0.0f});
+    escManager->addComponent(13, Health{100, 90});
+
     escManager->addComponent(1, Position{0.0f, 0.0f});
+    escManager->addComponent(1, Health{10.0f, 0.0f});
+    escManager->addComponent(1, Velocity{0.0f, 0.0f});
+
+    escManager->addComponent(1222, Position{0.0f, 0.0f});
 
     std::thread ecsThread([escManager](){
         while(true) {
             for(auto& [id, options] : escManager->entities) {
-                if(options == updateHealthRegeneration::neededComponents) {
+                bool need = ((options & updateHealthRegeneration::neededComponents) == updateHealthRegeneration::neededComponents);
+                if(need) {
                     updateHealthRegeneration{}(id, escManager->m_components);
                     std::this_thread::sleep_for(std::chrono::seconds(1));
                 }
