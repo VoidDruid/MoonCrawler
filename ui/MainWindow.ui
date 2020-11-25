@@ -76,7 +76,7 @@
   <customwidget>
    <class>MoonCrawler::Canvas</class>
    <extends>QWidget</extends>
-   <header>UI/Canvas.h</header>
+   <header>Game/Render/Canvas.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

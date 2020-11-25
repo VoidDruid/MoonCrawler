@@ -44,16 +44,7 @@ Canvas* MainWindow::getGameCanvas() {
 
 bool MainWindow::event(QEvent *event)
 {
-    if (event->type() == QEvent::KeyPress) {
-        auto *ke = static_cast<QKeyEvent *>(event);
-        if (ke->key() == Qt::Key_Tab) {
-            // special tab handling here
-            std::cout << "hehe tab" << std::endl;
-            return true;
-        }
-    }
-
-    return QWidget::event(event);
+    return QMainWindow::event(event);
 }
 
 #include "moc_MainWindow.cpp"

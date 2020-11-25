@@ -3,7 +3,7 @@
 #include <memory>
 #include <QMainWindow>
 
-#include "UI/Canvas.h"
+#include "src/Game/Render/Canvas.h"
 #include "Managers/GameManager.h"
 #include "Managers/NetworkManager.h"
 
