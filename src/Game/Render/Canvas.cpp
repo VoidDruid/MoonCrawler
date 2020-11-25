@@ -5,8 +5,10 @@
 using namespace MoonCrawler;
 
 Canvas::Canvas(QWidget* Parent) :
-    QSFMLCanvas(Parent), m_resourceManager(std::move(ResourceManager("../resources")))
-{}
+    QSFMLCanvas(Parent), m_resourceManager{"../resources"}
+{
+    m_Layers.emplace_back();
+}
 
 template <class T> std::shared_ptr<T> Canvas::get(std::string resourceName) {
     return m_resourceManager.get<T>(resourceName);

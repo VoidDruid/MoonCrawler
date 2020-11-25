@@ -8,6 +8,12 @@ class QSFMLCanvas : public QWidget, public sf::RenderWindow {
 public:
     explicit QSFMLCanvas(QWidget *parent);
 
+    QSFMLCanvas(QSFMLCanvas const &) = delete;
+
+    void operator=(QSFMLCanvas const &x) = delete;
+
+    QSFMLCanvas(QSFMLCanvas&&) = delete;
+
     virtual ~QSFMLCanvas() = default;
 
     virtual void setFrameTime(int frameTime);
