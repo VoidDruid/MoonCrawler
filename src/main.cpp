@@ -2,6 +2,7 @@
 
 #include "Managers/NetworkManager.h"
 #include "Managers/GameManager.h"
+#include "Managers/ECSManager.h"
 
 using namespace MoonCrawler;
 
@@ -17,18 +18,17 @@ void initManagers() {
 
 int main(int argc, char **argv)
 {
-    initManagers();
     QApplication app(argc, argv);
 
-    auto mainWindow = new MoonCrawler::MainWindow();
+    auto mainWindow = std::make_shared<MainWindow>();
+    initManagers();
 
-    mainWindow->setWindowTitle("Qt SFML");
+    mainWindow->setWindowTitle("Moon Crawler");
     mainWindow->resize(800, 600);
     mainWindow->show();
 
-    auto canvas = mainWindow->getGameCanvas();
-
-    auto retVal =  QApplication::exec();
+    auto retVal = QApplication::exec();
     getNetworkManager()->shutdown();
+
     return retVal;
 }
