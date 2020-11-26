@@ -1,7 +1,5 @@
 #include "UI/MainWindow.h"
 #include "ui_MainWindow.h"
-
-
 #include <iostream>
 
 using namespace MoonCrawler;

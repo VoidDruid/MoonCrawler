@@ -1,5 +1,5 @@
 #include "NetworkManager.h"
-#include "src/Managers/GameManager.h"
+#include "Managers/GameManager.h"
 #include "Event.h"
 #include "NetworkPAL/NetworkLinuxPAL.h"
 
