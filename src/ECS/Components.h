@@ -2,8 +2,9 @@
 
 #include <unordered_map>
 
+#include "Entity.h"
+
 namespace MoonCrawler {
-using EntityID = uint64_t;
 
 template <typename Type>
 using ComponentMap = std::unordered_map<EntityID, Type>;
