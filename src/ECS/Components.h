@@ -2,7 +2,7 @@
 
 #include <unordered_map>
 
-#include "Entity.h"
+#include "Common.h"
 
 namespace MoonCrawler {
 
@@ -24,8 +24,14 @@ Component(Position, 0x01) {  // TODO: automate (in macro) flag increment
     float y;
 };
 
+Component(Health, 0x02) {  // TODO: automate (in macro) flag increment
+    float value;
+};
+
 struct Components
 {
     Positions positions;
+    Healths healths;
 };
+#define COMPONENTS Position, Health
 }
