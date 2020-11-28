@@ -29,6 +29,11 @@ void ECSManager::removeEntity(EntityID entityId) {
     m_Entities.erase(entityId);
 }
 
+void ECSManager::removeEntity(const std::shared_ptr<EntityBase>& entity) {
+    std::lock_guard<std::mutex> lock{entityMutex};
+    m_Entities.erase(entity->ID);
+}
+
 void ECSManager::addEntity(const std::shared_ptr<EntityBase>& entity) {
     std::lock_guard<std::mutex> lock{entityMutex};
     entity->ID = generateId();
