@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_playButton = ui->playButton;
     m_startButton = ui->startButton;
     m_statusBar = ui->statusBar;
+    m_canvas = ui->gameCanvas;
 
     connect(m_hostButton, SIGNAL (released()), this, SLOT (handleHostButton()));
     connect(m_playButton, SIGNAL(released()), this, SLOT(handlePlayButton()));
@@ -28,18 +29,13 @@ void MainWindow::handleHostButton() {
     m_statusBar->showMessage("Pressed <host> button");
 }
 
-void MainWindow::handleStartButton() {
-    getGameManager()->startGame(m_isHost);
-    m_statusBar->showMessage("Pressed <start> button");
-}
-
 MainWindow::~MainWindow()
 {
     delete ui;
 }
 
 Canvas* MainWindow::getGameCanvas() {
-    return ui->gameCanvas;
+    return m_canvas;
 }
 
 bool MainWindow::event(QEvent *event)

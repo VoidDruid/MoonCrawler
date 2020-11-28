@@ -55,3 +55,6 @@ void StaticSprite::initialize(const std::shared_ptr<Texture>& texture, const sf:
     setTextureDirectly(texture);
     setSize(size);
 }
+
+void StaticSprite::prepare() {
+}

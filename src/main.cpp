@@ -38,8 +38,8 @@ struct PosSystem : public System {
     }
 };
 
-void initManagers() {
-    auto gameManager = getGameManager();
+void initManagers(const std::shared_ptr<MainWindow>& mainWindow) {
+    auto gameManager = initGameManager(mainWindow);
     auto networkManager = getNetworkManager();
 
     gameManager->addListener(networkManager);
@@ -53,7 +53,7 @@ int main(int argc, char **argv) try
     QApplication app(argc, argv);
 
     auto mainWindow = std::make_shared<MainWindow>();
-    initManagers();
+    initManagers(mainWindow);
 
     mainWindow->setWindowTitle("Moon Crawler");
     mainWindow->resize(800, 600);

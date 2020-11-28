@@ -19,7 +19,7 @@ MappedIterator<DrawablesMap, std::weak_ptr<IDrawable>> Layer::getDrawablesIterat
 }
 
 void Layer::addObject(EntityID id,const std::shared_ptr<IDrawable>& object) {
-    m_objectsMap[id] = std::move(object);
+    m_objectsMap[id] = object;
 }
 
 void Layer::removeObject(EntityID id) {

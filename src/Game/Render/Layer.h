@@ -13,6 +13,9 @@ using DrawablesMap = std::unordered_map<EntityID, std::shared_ptr<IDrawable>>;
 
 class Layer {
 public:
+    Layer() = default;
+    void operator=(Layer const &x) = delete;
+
     void addObject(EntityID id, const std::shared_ptr<IDrawable>& object);
 
     void removeObject(EntityID id);

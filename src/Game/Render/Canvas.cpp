@@ -1,5 +1,5 @@
 #include "Canvas.h"
-#include "StaticSprite.h"
+#include "Game/Render/Components/StaticSprite.h"
 #include "Resources/ResourceManager.h"
 
 using namespace MoonCrawler;
@@ -10,7 +10,7 @@ Canvas::Canvas(QWidget* Parent) :
     m_Layers.emplace_back();
 }
 
-template <class T> std::shared_ptr<T> Canvas::get(std::string resourceName) {
+template <class T> std::shared_ptr<T> Canvas::getResource(std::string resourceName) {
     return m_resourceManager.get<T>(resourceName);
 }
 
@@ -24,7 +24,7 @@ void Canvas::onUpdate()
 
     static StaticSprite sprite{};
     static ResourceManager manager("../resources");
-    static auto texture = get<Texture>("test.png");
+    static auto texture = getResource<Texture>("test.png");
 
     static float rotation = 0;
 
@@ -53,4 +53,8 @@ void Canvas::draw(const IDrawable& drawable) {
 
 void Canvas::draw(const std::shared_ptr<IDrawable>& drawable) {
     sf::RenderWindow::draw(drawable->getSprite());
+}
+
+void Canvas::addDrawable(const std::shared_ptr<IDrawable> &drawable) {
+
 }

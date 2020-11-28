@@ -10,12 +10,17 @@ class Canvas : public QSFMLCanvas {
 public :
     explicit Canvas(QWidget* Parent);
 
+    Canvas(Canvas const &) = delete;
+    void operator=(Canvas const &x) = delete;
+    Canvas(Canvas&&) = delete;
+
     void draw(const IDrawable& drawable);
 
     void draw(const std::shared_ptr<IDrawable>& drawable);
 
-    template <class T> std::shared_ptr<T> get(std::string resourceName);
+    template <class T> std::shared_ptr<T> getResource(std::string resourceName);
 
+    void addDrawable(const std::shared_ptr<IDrawable>& drawable);
 private :
     void onInit() override;
 

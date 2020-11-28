@@ -1,7 +1,7 @@
 #pragma once
 
-#include "IDrawable.h"
-#include "Resources/Texture.h"
+#include "Game/Render/IDrawable.h"
+#include "Game/Render/Resources/Texture.h"
 
 namespace MoonCrawler {
 class StaticSprite : public IDrawable {
@@ -9,9 +9,7 @@ public:
     StaticSprite() = default;
 
     StaticSprite(StaticSprite const &) = delete;
-
     void operator=(StaticSprite const &x) = delete;
-
     StaticSprite(StaticSprite&&) = delete;
 
     void initialize(const std::shared_ptr<Texture>& texture);
@@ -29,6 +27,8 @@ public:
     virtual void setTexture(const std::shared_ptr<Texture>& texture, bool adjustSize);
 
     void setTextureDirectly(const std::shared_ptr<Texture> &texture);
+
+    void prepare() override;
 
 private:
     sf::Sprite m_Sprite;
