@@ -11,36 +11,39 @@
 
 namespace MoonCrawler {
 
-#define defineAdd(T, fieldName)                              \
-if constexpr(std::is_same_v<Component, T>) {                 \
-    m_components.fieldName[entityId] = component;            \
-    m_Entities[entityId]->components |= has##T;              \
+#define defineAdd(T, fieldName)                                 \
+if constexpr(std::is_same_v<Component, T>) {                    \
+    (*m_components).fieldName[entityId] = component;            \
+    m_Entities[entityId]->hasComponents |= has##T;              \
 }
 
-#define defineRemove(T, fieldName)                           \
-if constexpr(std::is_same_v<Component, T>) {                 \
-    m_components.fieldName.erase(entityId);                  \
-    m_Entities[entityId]->components &= ~has##T;             \
+#define defineRemove(T, fieldName)                              \
+if constexpr(std::is_same_v<Component, T>) {                    \
+    (*m_components).fieldName.erase(entityId);                  \
+    m_Entities[entityId]->hasComponents &= ~has##T;             \
 }
 
-class ECSManager {
+class ECSManager : public std::enable_shared_from_this<ECSManager> {
 public:
-    void addEntity(const std::shared_ptr<Entity>& entity);
+    ECSManager();
+    void addEntity(const std::shared_ptr<EntityBase>& entity);
     void removeEntity(EntityID entityId);
     void start();
 
     template<typename Component>
     void addComponent(EntityID entityId, Component&& component) {
         std::lock_guard<std::mutex> lock{entityMutex};
-        static_assert(is_one_of<Component, Position>::value, "should be defined component!");
-        defineAdd(Position, positions)
+        static_assert(is_one_of<Component, COMPONENTS>::value, "should be defined component!");
+        defineAdd(Position, positions);
+        defineAdd(Health, healths);
     }
 
     template<typename Component>
     void removeComponent(EntityID entityId, Component&& component) {
         std::lock_guard<std::mutex> lock{entityMutex};
-        static_assert(is_one_of<Component, Position>::value, "should be defined component!");
-        defineRemove(Position, positions)
+        static_assert(is_one_of<Component, COMPONENTS>::value, "should be defined component!");
+        defineRemove(Position, positions);
+        defineRemove(Health, healths);
     }
 
     template<typename SystemT>
@@ -48,13 +51,11 @@ public:
         m_Systems.push_back(std::move(std::make_shared<SystemT>()));
     }
 private:
-    void ecsLoop();
-
     std::vector<std::shared_ptr<System>> m_Systems{};
-    Components m_components{};
-    std::unordered_map<EntityID, std::shared_ptr<Entity>> m_Entities{};
+    std::shared_ptr<Components> m_components{};
+    std::unordered_map<EntityID, std::shared_ptr<EntityBase>> m_Entities{};
     std::thread ecsThread;
-    const int m_milSecsLoopPause = MILSECS_PER_FRAME_60;
+    static constexpr int m_milSecsLoopPause = MILSECS_PER_FRAME_60;
     std::mutex entityMutex{};
 };
 }

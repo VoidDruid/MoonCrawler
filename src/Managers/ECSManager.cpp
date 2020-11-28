@@ -1,24 +1,26 @@
 #include "ECSManager.h"
 
-using namespace MoonCrawler;
+#include <iostream>
 
-void ECSManager::ecsLoop() {
-    while(true) {
-        for(auto& [id, entity] : m_Entities) {
-            for (auto& system : m_Systems) {
-                unsigned char neededComponentsFlag = system->getNeededComponents();
-                bool hasComponents = (entity->components & neededComponentsFlag) == neededComponentsFlag;
-                if(hasComponents) {
-                    system->operator()(id, m_components);
-                }
-            }
-        }
-        std::this_thread::sleep_for(std::chrono::milliseconds (m_milSecsLoopPause));
-    }
-}
+namespace MoonCrawler {
 
 void ECSManager::start() {
-    ecsThread = std::thread(&ECSManager::ecsLoop, this);
+    std::weak_ptr<ECSManager> weakSelf = shared_from_this();
+    auto ecsLoop = [weakSelf]() {
+        while(auto strongSelf = weakSelf.lock()) {
+            for(auto& [id, entity] : strongSelf->m_Entities) {
+                for (auto& system : strongSelf->m_Systems) {
+                    unsigned char neededComponentsFlag = system->getNeededComponents();
+                    bool hasComponents = (entity->hasComponents & neededComponentsFlag) == neededComponentsFlag;
+                    if(hasComponents) {
+                        system->operator()(id, *(strongSelf->m_components));
+                    }
+                }
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds (m_milSecsLoopPause));
+        }
+    };
+    ecsThread = std::thread(ecsLoop);
     ecsThread.detach();
 }
 
@@ -27,8 +29,14 @@ void ECSManager::removeEntity(EntityID entityId) {
     m_Entities.erase(entityId);
 }
 
-void ECSManager::addEntity(const std::shared_ptr<Entity>& entity) {
+void ECSManager::addEntity(const std::shared_ptr<EntityBase>& entity) {
     std::lock_guard<std::mutex> lock{entityMutex};
     entity->ID = generateId();
+    entity->m_components = m_components;
     m_Entities[entity->ID] = entity;
+}
+
+ECSManager::ECSManager()
+    : m_components{std::make_shared<Components>()}
+    {}
 }
