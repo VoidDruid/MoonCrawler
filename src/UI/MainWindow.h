@@ -3,7 +3,7 @@
 #include <memory>
 #include <QMainWindow>
 
-#include "Game/Render/Canvas.h"
+#include "Render/Canvas.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

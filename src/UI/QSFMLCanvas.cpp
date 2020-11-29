@@ -55,4 +55,5 @@ void QSFMLCanvas::paintEvent(QPaintEvent*)
 {
     onUpdate();
     display();
+    onAfterUpdate();
 }

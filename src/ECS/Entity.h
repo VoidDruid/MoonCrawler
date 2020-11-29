@@ -8,12 +8,13 @@
 #include "meta.h"
 
 namespace MoonCrawler {
+constexpr GID NO_ID = 0;
 
 struct EntityBase {
     unsigned char hasComponents{0x00};
-    EntityID ID{};
+    GID ID{NO_ID};
     std::weak_ptr<Components> m_components{};
 };
 
-EntityID generateId();
+GID generateId();
 }

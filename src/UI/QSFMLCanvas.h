@@ -23,6 +23,8 @@ private:
 
     virtual void onUpdate() {};
 
+    virtual void onAfterUpdate() {};
+
     QPaintEngine *paintEngine() const override;
 
     void showEvent(QShowEvent *) override;
@@ -30,6 +32,9 @@ private:
     void paintEvent(QPaintEvent *) override;
 
     QTimer m_timer;
+
     bool m_isInitialized;
+
+
 };
 }

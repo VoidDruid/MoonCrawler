@@ -24,7 +24,7 @@ void ECSManager::start() {
     ecsThread.detach();
 }
 
-void ECSManager::removeEntity(EntityID entityId) {
+void ECSManager::removeEntity(GID entityId) {
     std::lock_guard<std::mutex> lock{entityMutex};
     m_Entities.erase(entityId);
 }

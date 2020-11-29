@@ -1,9 +1,7 @@
-#include <QtCore>
 #include "StaticSprite.h"
+#include "consts.h"
 
 using namespace MoonCrawler;
-
-const sf::Vector2f UNIT_VECTOR2F = sf::Vector2f(1, 1);
 
 void StaticSprite::setPosition(const sf::Vector2f& position) {
     m_Sprite.setPosition(position);
@@ -40,6 +38,7 @@ void StaticSprite::setTexture(const std::shared_ptr<Texture>& texture, bool adju
     }
 
     setTextureDirectly(texture);
+    center();
 
     // adjust size to previous value
     if (adjustSize) {
@@ -53,8 +52,15 @@ void StaticSprite::initialize(const std::shared_ptr<Texture>& texture) {
 
 void StaticSprite::initialize(const std::shared_ptr<Texture>& texture, const sf::Vector2i& size) {
     setTextureDirectly(texture);
+    center();
     setSize(size);
 }
 
-void StaticSprite::prepare() {
+inline void StaticSprite::prepare() {
+}
+
+void StaticSprite::center() {
+    // Sets sprite center at center-bottom of it
+    auto currentSize = m_Sprite.getLocalBounds();
+    m_Sprite.setOrigin(sf::Vector2f(currentSize.width / 2, currentSize.height));
 }

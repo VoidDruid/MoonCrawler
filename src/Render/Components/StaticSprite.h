@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Game/Render/IDrawable.h"
-#include "Game/Render/Resources/Texture.h"
+#include "Render/IDrawable.h"
+#include "Render/Resources/Texture.h"
 
 namespace MoonCrawler {
 class StaticSprite : public IDrawable {
@@ -31,6 +31,8 @@ public:
     void prepare() override;
 
 private:
+    void center();
+
     sf::Sprite m_Sprite;
 };
 }
