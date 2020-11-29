@@ -26,6 +26,12 @@ public:
         return object->ID;
     }
 
+    template <typename T>
+    void addSystem() {
+        static_assert(std::is_base_of<System, T>::value, "Should be a derivative of System");
+        m_ecsManager.addSystem<T>();
+    }
+
     inline sf::Int32 getElapsedMillis();
 
     inline sf::Int32 getDeltaMillis();

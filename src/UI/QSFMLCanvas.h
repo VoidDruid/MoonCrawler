@@ -25,6 +25,8 @@ private:
 
     virtual void onAfterUpdate() {};
 
+    virtual void onEvent(const sf::Event& event) {};
+
     QPaintEngine *paintEngine() const override;
 
     void showEvent(QShowEvent *) override;
