@@ -108,8 +108,7 @@ int main(int argc, char **argv) try
     staticEntityPtr->initialize(texture, sf::Vector2i(100, 100));
     staticEntityPtr->setPosition(sf::Vector2f(0, 0));
 
-    //auto id = scene.addObject<StaticEntity>(staticEntityPtr);  // так должно быть, но не работает
-    auto id = scene.getCanvas()->addObject<IDrawable>(staticEntityPtr);
+    auto id = scene.addObject<StaticEntity>(staticEntityPtr);
     scene.moveCamera(sf::Vector2f(0, 300));
 
     qDebug() << id;

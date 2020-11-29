@@ -12,29 +12,26 @@
 
 namespace MoonCrawler {
 using DrawablesMap = std::unordered_map<GID, std::weak_ptr<IDrawable>>;
-template <class T> using is_drawable_entity = typename std::enable_if<
-    std::is_base_of_v<IDrawable, T> &&
-    std::is_base_of_v<EntityBase, T>>;
-
 class Layer {
 public:
     Layer() = default;
     void operator=(Layer const &x) = delete;
 
-    template <typename T>
-    GID  addObject(const std::shared_ptr<T>& object);
-
-    template <typename T, is_drawable_entity<T>>
+    template<typename T>
     GID addObject(const std::shared_ptr<T>& object) {
-        if (object->ID == NO_ID) {
-            return NO_ID;
-        }
-        m_objectsMap[object->ID] = object;
-        return object->ID;
-    }
+        static_assert(std::is_base_of<IDrawable, T>::value, "Object must be instance of IDrawable");
 
-    template <> GID addObject<IDrawable>(const std::shared_ptr<IDrawable>& object) {
-        GID id = generateId();
+        GID id;
+        if constexpr(std::is_base_of<EntityBase, T>::value) {
+            if (object->ID == NO_ID) {
+                return NO_ID;
+            }
+            id = object->ID;
+        }
+        else {
+            id = generateId();
+        }
+
         m_objectsMap[id] = std::move(std::weak_ptr<IDrawable>(object));
         return id;
     }

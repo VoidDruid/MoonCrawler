@@ -16,7 +16,7 @@ public:
 
     template<typename T>
     GID addObject(const std::shared_ptr<T>& object) {
-        static_assert(std::is_base_of<EntityBase, T>::value, "jjj");
+        static_assert(std::is_base_of<EntityBase, T>::value, "Scene only accepts entities");
         m_ecsManager.addEntity(object);
 
         if constexpr(std::is_base_of_v<IDrawable, T>) {
