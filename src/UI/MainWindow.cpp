@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_playButton = ui->playButton;
     m_startButton = ui->startButton;
     m_statusBar = ui->statusBar;
+    m_canvas = ui->gameCanvas;
 
     connect(m_hostButton, SIGNAL (released()), this, SLOT (handleHostButton()));
     connect(m_playButton, SIGNAL(released()), this, SLOT(handlePlayButton()));
@@ -28,32 +29,18 @@ void MainWindow::handleHostButton() {
     m_statusBar->showMessage("Pressed <host> button");
 }
 
-void MainWindow::handleStartButton() {
-    getGameManager()->startGame(m_isHost);
-    m_statusBar->showMessage("Pressed <start> button");
-}
-
 MainWindow::~MainWindow()
 {
     delete ui;
 }
 
 Canvas* MainWindow::getGameCanvas() {
-    return ui->gameCanvas;
+    return m_canvas;
 }
 
 bool MainWindow::event(QEvent *event)
 {
-    if (event->type() == QEvent::KeyPress) {
-        auto *ke = static_cast<QKeyEvent *>(event);
-        if (ke->key() == Qt::Key_Tab) {
-            // special tab handling here
-            std::cout << "hehe tab" << std::endl;
-            return true;
-        }
-    }
-
-    return QWidget::event(event);
+    return QMainWindow::event(event);
 }
 
 #include "moc_MainWindow.cpp"

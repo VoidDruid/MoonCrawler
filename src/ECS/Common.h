@@ -1,3 +1,3 @@
 #pragma once
 
-using EntityID = uint64_t;
+using GID = uint64_t;

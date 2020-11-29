@@ -58,10 +58,26 @@ void GameManager::sendEvent(Event& event) {
         }
     }
 }
+
+GameManager::GameManager(const std::shared_ptr<MainWindow>& mainWindow) :
+    m_mainWindow{mainWindow}
+{}
+
 namespace MoonCrawler {
+static std::shared_ptr<GameManager> _staticGameManager;
+
+std::shared_ptr<GameManager> initGameManager(const std::shared_ptr<MainWindow>& mainWindow) {
+    _staticGameManager = std::make_shared<GameManager>(mainWindow);
+    return _staticGameManager;
+}
+
 std::shared_ptr<GameManager> getGameManager() {
-    static std::shared_ptr<GameManager> staticGameManager = std::make_shared<GameManager>();
-    return staticGameManager;
+    return _staticGameManager;
 }
 }
 
+void MainWindow::handleStartButton() {
+    getGameManager()->startGame(m_isHost);
+    m_canvas->clear();
+    m_statusBar->showMessage("Pressed <start> button");
+}

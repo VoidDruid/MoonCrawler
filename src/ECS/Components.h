@@ -7,7 +7,7 @@
 namespace MoonCrawler {
 
 template <typename Type>
-using ComponentMap = std::unordered_map<EntityID, Type>;
+using ComponentMap = std::unordered_map<GID, Type>;
 
 template <typename C>
 constexpr unsigned char getBitFlag();

@@ -27,12 +27,12 @@ class ECSManager : public std::enable_shared_from_this<ECSManager> {
 public:
     ECSManager();
     void addEntity(const std::shared_ptr<EntityBase>& entity);
-    void removeEntity(EntityID entityId);
+    void removeEntity(GID entityId);
     void removeEntity(const std::shared_ptr<EntityBase>& entity);
     void start();
 
     template<typename Component>
-    void addComponent(EntityID entityId, Component&& component) {
+    void addComponent(GID entityId, Component&& component) {
         std::lock_guard<std::mutex> lock{entityMutex};
         static_assert(is_one_of<Component, COMPONENTS>::value, "should be defined component!");
         defineAdd(Position, positions, entityId);
@@ -48,7 +48,7 @@ public:
     }
 
     template<typename Component>
-    void removeComponent(EntityID entityId, Component&& component) {
+    void removeComponent(GID entityId, Component&& component) {
         std::lock_guard<std::mutex> lock{entityMutex};
         static_assert(is_one_of<Component, COMPONENTS>::value, "should be defined component!");
         defineRemove(Position, positions, entityId);
@@ -70,7 +70,7 @@ public:
 private:
     std::vector<std::shared_ptr<System>> m_Systems{};
     std::shared_ptr<Components> m_components{};
-    std::unordered_map<EntityID, std::shared_ptr<EntityBase>> m_Entities{};
+    std::unordered_map<GID, std::shared_ptr<EntityBase>> m_Entities{};
     std::thread ecsThread;
     static constexpr int m_milSecsLoopPause = MILSECS_PER_FRAME_60;
     std::mutex entityMutex{};

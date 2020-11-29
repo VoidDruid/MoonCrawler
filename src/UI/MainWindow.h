@@ -3,9 +3,7 @@
 #include <memory>
 #include <QMainWindow>
 
-#include "UI/Canvas.h"
-#include "Managers/GameManager.h"
-#include "Managers/NetworkManager.h"
+#include "Render/Canvas.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -29,9 +27,12 @@ private:
 
     bool m_isHost;
 
+    Canvas* m_canvas = nullptr;
+
     QStatusBar* m_statusBar = nullptr;
 
     QPushButton* m_playButton = nullptr;
+
     QPushButton* m_hostButton = nullptr;
 
     QPushButton* m_startButton = nullptr;

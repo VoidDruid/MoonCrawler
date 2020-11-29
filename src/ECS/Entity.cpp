@@ -1,8 +1,8 @@
 #include "Entity.h"
 
 namespace MoonCrawler {
-EntityID generateId() {
-    static EntityID id = 0;
+GID generateId() {
+    static GID id = NO_ID;  // starting id is never used
     return ++id;
 }
 }
