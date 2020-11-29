@@ -13,6 +13,7 @@ using namespace MoonCrawler;
 #include "Render/Resources/Texture.h"
 #include "Game/Scene.h"
 #include <Game/StaticEntity.h>
+#include <Game/MainHeroIOSystem.h>
 
 struct Mover : public System {
     void operator()(std::shared_ptr<Scene> scene, std::shared_ptr<EntityBase> entity, Components& components) override {
@@ -55,7 +56,8 @@ int main(int argc, char **argv) try
     staticEntityPtr->setPosition(sf::Vector2f(0, 0));
 
     auto id = scene->addObject<StaticEntity>(staticEntityPtr);
-    scene->addSystem<Mover>();
+    scene->addComponent(id, Position{0, 0});
+    scene->addSystem<MainHeroIOSystem>();
     scene->moveCamera(sf::Vector2f(0, 300));
 
     scene->start();
