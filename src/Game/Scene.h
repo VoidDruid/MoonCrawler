@@ -14,8 +14,9 @@ public:
     Scene(Scene&&) = delete;
 
 
-    template<typename T, std::enable_if<std::is_base_of<EntityBase, T>::value>>
+    template<typename T>
     GID addObject(const std::shared_ptr<T>& object) {
+        static_assert(std::is_base_of<EntityBase, T>::value, "jjj");
         m_ecsManager.addEntity(object);
 
         if constexpr(std::is_base_of_v<IDrawable, T>) {
