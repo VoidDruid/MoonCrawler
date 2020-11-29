@@ -22,15 +22,10 @@ public:
         static_assert(std::is_base_of<IDrawable, T>::value, "Object must be instance of IDrawable");
 
         GID id;
-        if constexpr(std::is_base_of<EntityBase, T>::value) {
-            if (object->ID == NO_ID) {
-                return NO_ID;
-            }
-            id = object->ID;
+        if (object->ID == NO_ID) {
+            return NO_ID;
         }
-        else {
-            id = generateId();
-        }
+        id = object->ID;
 
         m_objectsMap[id] = std::move(std::weak_ptr<IDrawable>(object));
         return id;

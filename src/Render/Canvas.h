@@ -34,9 +34,9 @@ public :
 
     void restart();
 
-    sf::Int32 getElapsedMillis();
+    sf::Int64 getElapsedMicros();
 
-    sf::Int32 getDeltaMillis();
+    sf::Int64 getDeltaMicros();
 private :
     void onInit() override;
 
@@ -52,8 +52,11 @@ private :
 
     sf::Clock m_clock{};
 
-    sf::Int32 m_lastFrameTimeMillis{0};
+    sf::Int64 m_lastFrameTimeMicros{0};
 
     bool m_isGoing{false};
 };
+
+class Scene;
+std::shared_ptr<Scene> getCurrentScene();
 }
