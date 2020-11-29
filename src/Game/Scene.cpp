@@ -7,6 +7,7 @@ Scene::Scene(MoonCrawler::Canvas *canvas) :
 {
     m_view = sf::View(sf::Vector2f(0,0), m_canvas->getDefaultView().getSize());
     m_canvas->setView(m_view);
+    m_ecsManager = std::make_shared<ECSManager>();
 }
 
 sf::Int32 Scene::getElapsedMillis() {
@@ -19,6 +20,7 @@ sf::Int32 Scene::getDeltaMillis() {
 
 void Scene::start() {
     m_canvas->start();
+    m_ecsManager->start();
 }
 
 sf::Vector2f Scene::getCameraPosition() {

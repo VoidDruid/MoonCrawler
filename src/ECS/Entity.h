@@ -14,6 +14,10 @@ struct EntityBase {
     unsigned char hasComponents{0x00};
     GID ID{NO_ID};
     std::weak_ptr<Components> m_components{};
+
+    virtual bool isKeyboardPlayable() {
+        return false;
+    }
 };
 
 GID generateId();

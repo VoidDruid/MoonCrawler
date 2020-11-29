@@ -2,6 +2,7 @@
 
 #include "Managers/NetworkManager.h"
 #include "Managers/GameManager.h"
+#include "Game/MainHeroIOSystem.h"
 
 #include <iostream>
 
@@ -16,6 +17,8 @@ using namespace MoonCrawler;
 #include "Game/Scene.h"
 
 class StaticEntity : public StaticSprite, public EntityBase {
+public:
+    bool isKeyboardPlayable() override { return true;}
 };
 #endif
 
@@ -113,6 +116,11 @@ int main(int argc, char **argv) try
 
     qDebug() << id;
 #endif
+    auto canvas = scene.getCanvas();
+    auto mainHeroIo = std::make_shared<MainHeroIOSystem>();
+    scene.addSystem(mainHeroIo);
+    scene.addComponent(id, Position{0,0});
+    scene.start();
 
     auto retVal = QApplication::exec();
     getNetworkManager()->shutdown();
@@ -120,4 +128,5 @@ int main(int argc, char **argv) try
     return retVal;
 } catch(std::exception& exc) {
     std::cerr << exc.what() << std::endl;
+    exit(-1);
 }

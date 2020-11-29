@@ -12,21 +12,23 @@ using ComponentMap = std::unordered_map<GID, Type>;
 template <typename C>
 constexpr unsigned char getBitFlag();
 
-#define Component(T, bitFlag)                                         \
+#define DefineComponent(T, bitFlag)                                         \
 constexpr unsigned char has##T = bitFlag;                             \
 struct T;                                                             \
 template <> constexpr unsigned char getBitFlag<T>() {return bitFlag;} \
 using T##s = ComponentMap<T>;                                         \
 struct T
 
-Component(Position, 0x01) {  // TODO: automate (in macro) flag increment
+DefineComponent(Position, 0x01) {  // TODO: automate (in macro) flag increment
     float x;
     float y;
 };
 
-Component(Health, 0x02) {  // TODO: automate (in macro) flag increment
+DefineComponent(Health, 0x02) {  // TODO: automate (in macro) flag increment
     float value;
 };
+
+constexpr unsigned char isKeyboardPlayable = 0x04;
 
 struct Components
 {
