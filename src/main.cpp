@@ -14,6 +14,7 @@ using namespace MoonCrawler;
 #include "Game/Scene.h"
 #include <Game/StaticEntity.h>
 #include <Game/MainHeroIOSystem.h>
+#include <Game/GameSynchronizerSystem.h>
 
 struct Mover : public System {
     void operator()(std::shared_ptr<Scene> scene, std::shared_ptr<EntityBase> entity, Components& components) override {
@@ -58,6 +59,7 @@ int main(int argc, char **argv) try
     auto id = scene->addObject<StaticEntity>(staticEntityPtr);
     scene->addComponent(id, Position{0, 0});
     scene->addSystem<MainHeroIOSystem>();
+    scene->addSystem<GameSynchronizerSystem>();
     scene->moveCamera(sf::Vector2f(0, 300));
 
     scene->start();

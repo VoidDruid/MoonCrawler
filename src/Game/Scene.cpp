@@ -10,6 +10,10 @@ Scene::Scene(Canvas *canvas) :
     m_ecsManager = std::make_shared<ECSManager>();
 }
 
+void Scene::updateEntity(const std::shared_ptr<EntityBase>& entity) {
+    m_ecsManager->updateEntity(entity);
+}
+
 sf::Int64 Scene::getElapsedMicros() {
     return m_canvas->getElapsedMicros();
 }

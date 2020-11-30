@@ -35,7 +35,7 @@ void removeComponent(GID entityId, T component)    {                            
     std::lock_guard<std::mutex> lock{entityMutex};                              \
     bool is_one_of_ = is_one_of<T, COMPONENTS>::value;                          \
     assert(is_one_of_);                                                         \
-(*m_components).fieldName.erase(entityId);                                  \
+    (*m_components).fieldName.erase(entityId);                                  \
     m_Entities[entityId]->hasComponents &= ~has##T;                             \
 }
 
@@ -52,6 +52,7 @@ class ECSManager : public std::enable_shared_from_this<ECSManager> {
 public:
     ECSManager();
     void addEntity(const std::shared_ptr<EntityBase>& entity);
+    void updateEntity(const std::shared_ptr<EntityBase>& entity);
     void removeEntity(GID entityId);
     void removeEntity(const std::shared_ptr<EntityBase>& entity);
     void start();

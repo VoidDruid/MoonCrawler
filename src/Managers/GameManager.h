@@ -24,6 +24,8 @@ public:
 
     void startGame(bool isHost);
 
+    bool isHost() { return m_isHost; }
+
 private:
     void sendEvent(Event& event);
 
