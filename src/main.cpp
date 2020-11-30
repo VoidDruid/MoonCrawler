@@ -2,80 +2,28 @@
 
 #include "Managers/NetworkManager.h"
 #include "Managers/GameManager.h"
-#include "Game/MainHeroIOSystem.h"
 
 #include <iostream>
 
 using namespace MoonCrawler;
 
-
 #define DEBUGGING_RENDER
 #ifdef DEBUGGING_RENDER
 #include "Render/Canvas.h"
 #include "Render/Resources/Texture.h"
-#include "Render/Components/StaticSprite.h"
 #include "Game/Scene.h"
+#include <Game/StaticEntity.h>
+#include <Game/MainHeroIOSystem.h>
 
-class StaticEntity : public StaticSprite, public EntityBase {
-public:
-    bool isKeyboardPlayable() override { return true;}
-};
-#endif
-
-//#define DEBUGGING_ECS
-#ifdef DEBUGGING_ECS
-#include "Managers/ECSManager.h"
-struct MyEntity : public EntityBase {
-    void run() {
-        auto myComponents = *m_components.lock();
-        std::cout << myComponents.positions[ID].x << std::endl;
-        std::cout << myComponents.healths[ID].value << std::endl;
+struct Mover : public System {
+    void operator()(std::shared_ptr<Scene> scene, std::shared_ptr<EntityBase> entity, Components& components) override {
+        Position& position = components.get<Position>(entity->ID);
+        position.x += 1;
     }
-};
-
-struct MySystem : public System {
-    void operator()(GID id, Components& components) override{
-        std::cerr << "MySystem ID: " << id << " " <<  components.positions[id].x << ":" << components.positions[id].y << std::endl;
-    }
-    inline unsigned char getNeededComponents() override {
+    unsigned char getNeededComponents() override {
         return hasPosition;
     }
 };
-
-struct PosSystem : public System {
-    void operator()(GID id, Components& components) override{
-        std::cerr << "PosSystem ID: " << id << " " <<  components.positions[id].x << ":" << components.positions[id].y << std::endl;
-        std::cerr << "PosSystem ID: " << id << " " <<  components.healths[id].value << std::endl;
-        if(components.healths[id].value > 100) {
-            components.healths[id].value--;
-        }
-    }
-    inline unsigned char getNeededComponents() override {
-        return hasPosition | hasHealth;
-    }
-};
-
-void ecs() {
-    auto ecsManager = std::make_shared<ECSManager>();
-    ecsManager->addSystem<MySystem>();
-    ecsManager->addSystem<PosSystem>();
-
-    auto ent = std::make_shared<MyEntity>();
-    ecsManager->addEntity(ent);
-    ecsManager->addComponent(ent->ID, Position{10, 10});
-
-    auto ent2 = std::make_shared<MyEntity>();
-    ecsManager->addEntity(ent2);
-    ecsManager->addComponent(ent2->ID, Position{103, 130});
-    ecsManager->addComponent(ent2->ID, Health{100500});
-
-    auto ent3 = std::make_shared<MyEntity>();
-    ecsManager->addEntity(ent3);
-    ent3->run();
-
-    ecsManager->start();
-
-}
 #endif
 
 void initManagers(const std::shared_ptr<MainWindow>& mainWindow) {
@@ -99,28 +47,23 @@ int main(int argc, char **argv) try
     mainWindow->resize(800, 600);
     mainWindow->show();
 
-#ifdef DEBUGGING_ECS
-    ecs();
-#endif
-
 #ifdef DEBUGGING_RENDER
-    auto scene = Scene(mainWindow->getGameCanvas());
+    auto scene = createScene(mainWindow->getGameCanvas());
     auto staticEntityPtr = std::make_shared<StaticEntity>();
-    auto texture = scene.getCanvas()->getResource<Texture>("test.png");
+    auto texture = scene->getCanvas()->getResource<Texture>("test.png");
 
     staticEntityPtr->initialize(texture, sf::Vector2i(100, 100));
     staticEntityPtr->setPosition(sf::Vector2f(0, 0));
 
-    auto id = scene.addObject<StaticEntity>(staticEntityPtr);
-    scene.moveCamera(sf::Vector2f(0, 300));
+    auto id = scene->addObject<StaticEntity>(staticEntityPtr);
+    scene->addComponent(id, Position{0, 0});
+    scene->addSystem<MainHeroIOSystem>();
+    scene->moveCamera(sf::Vector2f(0, 300));
+
+    scene->start();
 
     qDebug() << id;
 #endif
-    auto canvas = scene.getCanvas();
-    auto mainHeroIo = std::make_shared<MainHeroIOSystem>();
-    scene.addSystem(mainHeroIo);
-    scene.addComponent(id, Position{0,0});
-    scene.start();
 
     auto retVal = QApplication::exec();
     getNetworkManager()->shutdown();

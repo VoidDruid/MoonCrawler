@@ -1,6 +1,5 @@
 #include "Canvas.h"
 #include "Components/StaticSprite.h"
-#include "Resources/ResourceManager.h"
 
 using namespace MoonCrawler;
 
@@ -19,19 +18,21 @@ void Canvas::onUpdate()
     clear();
 
     auto iter = m_layers[0].getDrawablesIterator();
+    auto currentScenePtr = getCurrentScene();
     while (iter.hasValue()) {
-        auto spriteWeakPtr = iter.next();
-        if (auto spriteStrongPtr = spriteWeakPtr.lock()) {
-            draw(spriteStrongPtr);
+        auto drawableWeakPtr = iter.next();
+        if (auto drawableStrongPtr = drawableWeakPtr.lock()) {
+            drawableStrongPtr->prepare(currentScenePtr);
+            draw(drawableStrongPtr);
         }
     }
 }
 
-inline void Canvas::draw(const IDrawable& drawable) {
+void Canvas::draw(const IDrawable& drawable) {
     sf::RenderWindow::draw(drawable.getSprite());
 }
 
-inline void Canvas::draw(const std::shared_ptr<IDrawable>& drawable) {
+void Canvas::draw(const std::shared_ptr<IDrawable>& drawable) {
     sf::RenderWindow::draw(drawable->getSprite());
 }
 
@@ -42,7 +43,7 @@ void Canvas::start() {
 }
 
 inline void Canvas::updateLastFrameTime() {
-    m_lastFrameTimeMillis = getElapsedMillis();
+    m_lastFrameTimeMicros = getElapsedMicros();
 }
 
 void Canvas::onAfterUpdate() {
@@ -58,10 +59,10 @@ void Canvas::restart() {
     start();
 }
 
-inline sf::Int32 Canvas::getElapsedMillis() {
-    return m_clock.getElapsedTime().asMilliseconds();
+sf::Int64 Canvas::getElapsedMicros() {
+    return m_clock.getElapsedTime().asMicroseconds();
 }
 
-inline sf::Int32 Canvas::getDeltaMillis() {
-    return getElapsedMillis() - m_lastFrameTimeMillis;
+sf::Int64 Canvas::getDeltaMicros() {
+    return getElapsedMicros() - m_lastFrameTimeMicros;
 }

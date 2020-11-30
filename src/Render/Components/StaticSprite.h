@@ -20,15 +20,17 @@ public:
 
     virtual void setPosition(const sf::Vector2f& position);
 
+    virtual void move(const sf::Vector2f& position);
+
     virtual void setRotation(float angle);
+
+    virtual void rotate(float angle);
 
     virtual void setSize(const sf::Vector2i& size);
 
     virtual void setTexture(const std::shared_ptr<Texture>& texture, bool adjustSize);
 
     void setTextureDirectly(const std::shared_ptr<Texture> &texture);
-
-    void prepare() override;
 
 private:
     void center();

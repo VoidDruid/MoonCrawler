@@ -7,13 +7,14 @@ namespace MoonCrawler {
 void ECSManager::start() {
     std::weak_ptr<ECSManager> weakSelf = shared_from_this();
     auto ecsLoop = [weakSelf]() {
+        auto scenePtr = getCurrentScene();
         while(auto strongSelf = weakSelf.lock()) {
             for(auto& [_, entity] : strongSelf->m_Entities) {
                 for (auto& system : strongSelf->m_Systems) {
                     unsigned char neededComponentsFlag = system->getNeededComponents();
                     bool hasComponents = (entity->hasComponents & neededComponentsFlag) == neededComponentsFlag;
                     if(hasComponents) {
-                        system->operator()(entity, *(strongSelf->m_components));
+                        system->operator()(scenePtr, entity, *(strongSelf->m_components));
                     }
                 }
             }

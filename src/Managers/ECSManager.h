@@ -76,6 +76,11 @@ public:
     void addSystem(std::shared_ptr<System> system) {
         m_Systems.push_back(std::move(system));
     }
+
+    void addSystem(const std::shared_ptr<System>& system) {
+        m_Systems.push_back(system);
+    }
+
 private:
     std::vector<std::shared_ptr<System>> m_Systems{};
     std::shared_ptr<Components> m_components{};
@@ -84,4 +89,5 @@ private:
     static constexpr int m_milSecsLoopPause = MILSECS_PER_FRAME_60;
     std::mutex entityMutex{};
 };
+std::shared_ptr<Scene> getCurrentScene();
 }

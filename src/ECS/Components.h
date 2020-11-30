@@ -12,19 +12,22 @@ using ComponentMap = std::unordered_map<GID, Type>;
 template <typename C>
 constexpr unsigned char getBitFlag();
 
-#define DefineComponent(T, bitFlag)                                         \
+#define __ComponentDef__(T, bitFlag)                                  \
 constexpr unsigned char has##T = bitFlag;                             \
 struct T;                                                             \
 template <> constexpr unsigned char getBitFlag<T>() {return bitFlag;} \
 using T##s = ComponentMap<T>;                                         \
 struct T
 
-DefineComponent(Position, 0x01) {  // TODO: automate (in macro) flag increment
+#define __ComponentGetter__(T, field) \
+template<> T& get<T>(GID id) { return field[id]; }
+
+__ComponentDef__(Position, 0x01) {  // TODO: automate (in macro) flag increment
     float x;
     float y;
 };
 
-DefineComponent(Health, 0x02) {  // TODO: automate (in macro) flag increment
+__ComponentDef__(Health, 0x02) {  // TODO: automate (in macro) flag increment
     float value;
 };
 
@@ -34,6 +37,12 @@ struct Components
 {
     Positions positions;
     Healths healths;
+
+    template <typename T>
+    T& get(GID id);
+
+    __ComponentGetter__(Position, positions);
+    __ComponentGetter__(Health, healths);
 };
 #define COMPONENTS Position, Health
 }

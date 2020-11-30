@@ -56,11 +56,16 @@ void StaticSprite::initialize(const std::shared_ptr<Texture>& texture, const sf:
     setSize(size);
 }
 
-inline void StaticSprite::prepare() {
-}
-
 void StaticSprite::center() {
     // Sets sprite center at center-bottom of it
     auto currentSize = m_Sprite.getLocalBounds();
     m_Sprite.setOrigin(sf::Vector2f(currentSize.width / 2, currentSize.height));
+}
+
+void StaticSprite::move(const sf::Vector2f& position) {
+    m_Sprite.move(position);
+}
+
+void StaticSprite::rotate(float angle) {
+    m_Sprite.rotate(angle);
 }
