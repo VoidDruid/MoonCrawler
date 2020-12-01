@@ -55,7 +55,6 @@ int main(int argc, char **argv) try
 
     scene->start();
 #endif
-
     auto retVal = QApplication::exec();
     getNetworkManager()->shutdown();
 

@@ -52,6 +52,14 @@ void MoonCrawler::GameSynchronizerSystem::onEvent(MoonCrawler::Event &event) {
             if(auto strongScene = m_scene.lock()) {
                 strongScene->updateEntity(ent);
             }
+            return;
+        }
+        if(data["toDelete"] != nullptr) {
+            if(auto strongScene = m_scene.lock()) {
+                for(auto& item: data["toDelete"]) {
+                    strongScene->removeEntity(item);
+                }
+            }
         }
     }
 }

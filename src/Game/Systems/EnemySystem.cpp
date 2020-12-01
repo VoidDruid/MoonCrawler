@@ -9,7 +9,7 @@ MoonCrawler::EnemySystem::operator()(std::shared_ptr<Scene> scene, std::shared_p
     if(not player) {
         return;
     }
-    const float speed = 0.2;  // TODO: move to component
+    const float speed = 0.0;  // TODO: move to component
 
     // TODO optimize??
     auto& thisTransform = components.get<Transform>(entity->ID);

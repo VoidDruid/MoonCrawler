@@ -1,14 +1,36 @@
 #include "ECSManager.h"
+#include "Managers/NetworkManager.h"
 
 #include <iostream>
 
 namespace MoonCrawler {
 
+void sendToDeleteEvent(std::vector<GID>& toDelete) {
+    auto networkManager = getNetworkManager();
+    nlohmann::json toDeleteJson = nlohmann::json{};
+    toDeleteJson["toDelete"] = nlohmann::json::array();
+    toDeleteJson["gameState"] = "inGame";
+
+    for(auto& gid : toDelete) {
+        toDeleteJson["toDelete"].push_back(gid);
+    }
+    Event event{
+            toDeleteJson,
+            EventType::GameEvent,
+            EventStatus::New
+    };
+    networkManager->sendEvent(event);
+}
 void ECSManager::start() {
     std::weak_ptr<ECSManager> weakSelf = shared_from_this();
     auto ecsLoop = [weakSelf]() {
         auto scenePtr = getCurrentScene();
         while(auto strongSelf = weakSelf.lock()) {
+
+            if(not strongSelf->m_toDelete.empty()) {
+                sendToDeleteEvent(strongSelf->m_toDelete);
+            }
+
             for (GID toDelete : strongSelf->m_toDelete) {
                 strongSelf->m_Entities.erase(toDelete);
             }
@@ -57,25 +79,15 @@ if(entity->has<ComponentT>()) {                            \
 
 void ECSManager::updateEntity(const std::shared_ptr<EntityBase> &entity) {
     std::lock_guard<std::mutex> lock{entityMutex};
-    //m_Entities[entity->ID] = entity;
 
-    //UPDATE_COMPONENT(Collider);
-    //UPDATE_COMPONENT(Health);
-   // UPDATE_COMPONENT(EnemyTrait);
-   // UPDATE_COMPONENT(Transform);
+    UPDATE_COMPONENT(Collider);
+    UPDATE_COMPONENT(Health);
+    UPDATE_COMPONENT(EnemyTrait);
+    UPDATE_COMPONENT(Transform);
+    UPDATE_COMPONENT(MeleeAttack);
+    UPDATE_COMPONENT(RangedAttack);
+    UPDATE_COMPONENT(PlayerTrait);
 
-    if(entity->has<Collider>()) {
-        m_components->add<Collider>(entity->ID, entity->m_components->get<Collider>(entity->ID));
-    }
-    if(entity->has<Health>()) {
-        m_components->add<Health>(entity->ID, entity->m_components->get<Health>(entity->ID));
-    }
-    if(entity->has<EnemyTrait>()) {
-        m_components->add<EnemyTrait>(entity->ID, entity->m_components->get<EnemyTrait>(entity->ID));
-    }
-    if(entity->has<Transform>()) {
-        m_components->add<Transform>(entity->ID, entity->m_components->get<Transform>(entity->ID));
-    }
     entity->m_components = m_components;
 }
 }

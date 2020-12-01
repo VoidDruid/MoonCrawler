@@ -78,6 +78,7 @@ public:
     void setPlayer(const std::shared_ptr<EntityBase>& player);
 
     sf::Vector2f getMousePosition();
+    void removeEntity(GID entityId);
 private:
     std::shared_ptr<ECSManager> m_ecsManager;
 

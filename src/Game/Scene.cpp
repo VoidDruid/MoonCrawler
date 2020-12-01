@@ -71,6 +71,10 @@ sf::Vector2f Scene::getMousePosition() {
     return m_canvas->mapPixelToCoords(pixelPos) / PIXELS_PER_UNIT;
 }
 
+void Scene::removeEntity(GID entityId) {
+    m_ecsManager->removeEntity(entityId);
+}
+
 namespace MoonCrawler {
     static std::shared_ptr<Scene> _currentScene = nullptr;
 
