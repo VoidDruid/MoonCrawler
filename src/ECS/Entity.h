@@ -16,8 +16,8 @@ struct EntityBase {
     GID ID{NO_ID};
     std::shared_ptr<Components> m_components{};
 
-    virtual bool isKeyboardPlayable() { return true; }
-    virtual bool isDrawable() { return false; }  // Hack for integration with render system
+    bool isKeyboardPlayable{false};
+    bool isDrawable{false};
 
     template<typename T>
     bool has() const {
@@ -26,15 +26,15 @@ struct EntityBase {
     }
 };
 
-#define ADD_COMPONENT_TO_JSON(ComponentT, component) \
+#define ADD_COMPONENT_TO_JSON(ComponentT) \
 if(e.has<ComponentT>()) {                            \
-    j["components"][#ComponentT] = e.m_components->component[e.ID];\
+    j["components"][#ComponentT] = e.m_components->get<ComponentT>(e.ID);\
 }
 
 
-#define GET_COMPONENT_FROM_JSON(ComponentT, component) \
+#define GET_COMPONENT_FROM_JSON(ComponentT) \
 if(e.has<ComponentT>()) {                              \
-    e.m_components->component[e.ID] = j["components"][#ComponentT]; \
+    e.m_components->add<ComponentT>(e.ID, j["components"][#ComponentT]); \
 }
 
 inline void to_json(nlohmann::json& j, const EntityBase& e) {
@@ -42,21 +42,29 @@ inline void to_json(nlohmann::json& j, const EntityBase& e) {
     j = nlohmann::json{
         {"ID", e.ID},
         {"hasComponents", e.hasComponents},
+        {"isKeyboardPlayable", e.isKeyboardPlayable},
+        {"isDrawable", e.isDrawable},
     };
-    ADD_COMPONENT_TO_JSON(Position, positions);
-    ADD_COMPONENT_TO_JSON(Health, healths);
+    ADD_COMPONENT_TO_JSON(Transform);
+    ADD_COMPONENT_TO_JSON(Health);
+    ADD_COMPONENT_TO_JSON(Collider);
+    ADD_COMPONENT_TO_JSON(EnemyTrait);
 }
 
 inline void from_json(const nlohmann::json& j, EntityBase& e) {
     j.at("ID").get_to(e.ID);
     j.at("hasComponents").get_to(e.hasComponents);
+    j.at("isKeyboardPlayable").get_to(e.isKeyboardPlayable);
+    j.at("isDrawable").get_to(e.isDrawable);
 
     if(not e.m_components) {
         e.m_components = std::make_shared<Components>();
     }
 
-    GET_COMPONENT_FROM_JSON(Position, positions);
-    GET_COMPONENT_FROM_JSON(Health, healths);
+    GET_COMPONENT_FROM_JSON(Transform);
+    GET_COMPONENT_FROM_JSON(Health);
+    GET_COMPONENT_FROM_JSON(Collider);
+    GET_COMPONENT_FROM_JSON(EnemyTrait);
 }
 
 

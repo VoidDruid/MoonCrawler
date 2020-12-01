@@ -46,17 +46,18 @@ ECSManager::ECSManager()
     : m_components{std::make_shared<Components>()}
     {}
 
-#define UPDATE_COMPONENT(ComponentT, component) \
+#define UPDATE_COMPONENT(ComponentT) \
 if(entity->has<ComponentT>()) {                            \
-    m_components->component[entity->ID] = entity->m_components->component[entity->ID]; \
+    m_components->add<ComponentT>(entity->ID, entity->m_components->get<ComponentT>(entity->ID)); \
 }
 
 void ECSManager::updateEntity(const std::shared_ptr<EntityBase> &entity) {
     std::lock_guard<std::mutex> lock{entityMutex};
     m_Entities[entity->ID] = entity;
 
-    UPDATE_COMPONENT(Position, positions);
-    UPDATE_COMPONENT(Health, healths);
-
+    UPDATE_COMPONENT(Collider);
+    UPDATE_COMPONENT(Health);
+    UPDATE_COMPONENT(EnemyTrait);
+    UPDATE_COMPONENT(Transform);
 }
 }

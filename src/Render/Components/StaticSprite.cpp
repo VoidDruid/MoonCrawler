@@ -7,15 +7,28 @@ void StaticSprite::setPosition(const sf::Vector2f& position) {
     m_Sprite.setPosition(position);
 }
 
+void StaticSprite::setPosition(float x, float y) {
+    m_Sprite.setPosition(x , y);
+}
+
 void StaticSprite::setRotation(float angle) {
     m_Sprite.setRotation(angle);
 }
 
 void StaticSprite::setSize(const sf::Vector2i& size) {
     auto currentSize = m_Sprite.getLocalBounds();
+
+    if (size.x == currentSize.width && size.y == currentSize.height) {
+        return;
+    }
+
     m_Sprite.setScale(
         size.x / currentSize.width,
         size.y / currentSize.height);
+}
+
+void StaticSprite::setSize(int x, int y) {
+    setSize(sf::Vector2i(x, y));  // TODO
 }
 
 const sf::Sprite& MoonCrawler::StaticSprite::getSprite() const {
@@ -57,9 +70,9 @@ void StaticSprite::initialize(const std::shared_ptr<Texture>& texture, const sf:
 }
 
 void StaticSprite::center() {
-    // Sets sprite center at center-bottom of it
+    // Sets sprite center at actual center of it
     auto currentSize = m_Sprite.getLocalBounds();
-    m_Sprite.setOrigin(sf::Vector2f(currentSize.width / 2, currentSize.height));
+    m_Sprite.setOrigin(sf::Vector2f(currentSize.width / 2, currentSize.height / 2));
 }
 
 void StaticSprite::move(const sf::Vector2f& position) {

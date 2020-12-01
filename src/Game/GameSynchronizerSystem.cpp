@@ -23,13 +23,7 @@ void MoonCrawler::GameSynchronizerSystem::operator()(std::shared_ptr<Scene> scen
     //if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
     //{
         //std::cout << "Current Entity with ID = " << entity->ID << std::endl;
-        static Position prevPos{};
-        auto& position = components.positions[entity->ID];
-
-        if(prevPos.x == position.x && prevPos.y == position.y) {
-            return;
-        }
-        prevPos = position;
+    auto& position = components.get<Transform>(entity->ID);
     /*nlohmann::json js;
     to_json(js, position);
     std::cout << js << std::endl;

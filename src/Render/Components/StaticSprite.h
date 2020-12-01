@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Render/IDrawable.h"
-#include "Render/Resources/Texture.h"
+#include "Resources/Texture.hpp"
 
 namespace MoonCrawler {
 class StaticSprite : public IDrawable {
@@ -20,6 +20,8 @@ public:
 
     virtual void setPosition(const sf::Vector2f& position);
 
+    virtual void setPosition(float x, float y);
+
     virtual void move(const sf::Vector2f& position);
 
     virtual void setRotation(float angle);
@@ -27,6 +29,8 @@ public:
     virtual void rotate(float angle);
 
     virtual void setSize(const sf::Vector2i& size);
+
+    virtual void setSize(int x, int y);
 
     virtual void setTexture(const std::shared_ptr<Texture>& texture, bool adjustSize);
 

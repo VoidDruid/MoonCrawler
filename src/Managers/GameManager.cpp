@@ -1,5 +1,6 @@
 #include "GameManager.h"
 #include "Event.h"
+#include "Game/Scene.h"
 
 #include <iostream>
 
@@ -79,5 +80,8 @@ std::shared_ptr<GameManager> getGameManager() {
 void MainWindow::handleStartButton() {
     getGameManager()->startGame(m_isHost);
     m_canvas->clear();
+    if(not m_isHost) {
+        getCurrentScene()->startECSManager();
+    }
     m_statusBar->showMessage("Pressed <start> button");
 }

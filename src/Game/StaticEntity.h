@@ -5,9 +5,11 @@
 
 namespace MoonCrawler {
 struct StaticEntity : public StaticSprite, public EntityBase {
-    bool isDrawable() override { return true; }
+    StaticEntity() {
+        isDrawable = true;
+        isKeyboardPlayable = false;
+    }
 
     void prepare(const std::shared_ptr<Scene> &scene) override;
-    bool isKeyboardPlayable() override { return true; }
 };
 }
