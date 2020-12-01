@@ -5,7 +5,7 @@
 #include "Render/IDrawable.h"
 
 namespace MoonCrawler {
-class Scene {
+class Scene : public std::enable_shared_from_this<Scene>{
 public:
     explicit Scene(Canvas* canvas);
 
@@ -31,13 +31,18 @@ public:
     }
 
     template<typename Component>
-    void addComponent(const std::shared_ptr<EntityBase>& entity, Component&& component) {
+    void addComponent(const std::shared_ptr<EntityBase>& entity, const Component& component) {
         m_ecsManager->addComponent(entity, component);
     }
 
     template<typename Component>
     void addComponent(GID id, Component&& component) {
         m_ecsManager->addComponent(id, component);
+    }
+
+    template <class T>
+    std::shared_ptr<T> getResource(std::string resourceName) {
+        return m_canvas->getResource<T>(resourceName);
     }
 
     sf::Int64 getElapsedMicros();
@@ -53,6 +58,13 @@ public:
     void setCameraPosition(const sf::Vector2f& position);
 
     Canvas* getCanvas();
+
+    void populate(const std::string& layoutName);
+
+    template<typename... T>
+    MappedIterator<std::unordered_map<GID, std::shared_ptr<EntityBase>>, GID> getFitting() {
+        return m_ecsManager->getFitting<T...>();
+    }
 private:
     std::shared_ptr<ECSManager> m_ecsManager;
 
@@ -61,6 +73,8 @@ private:
     sf::View m_view;
 
     std::weak_ptr<Scene> m_currentSceneWeakPtr;
+
+    bool m_isPopulated{false};
 
     inline void updateView();
 };

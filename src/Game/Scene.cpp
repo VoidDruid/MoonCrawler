@@ -29,17 +29,18 @@ void Scene::start() {
 }
 
 sf::Vector2f Scene::getCameraPosition() {
-    return m_view.getCenter();
+    auto& center = m_view.getCenter();
+    return sf::Vector2f{center.x / PIXELS_PER_UNIT, -center.y / PIXELS_PER_UNIT};
 }
 
 
 void Scene::moveCamera(const sf::Vector2f& by) {
-    m_view.move(by);
+    m_view.move(by.x * PIXELS_PER_UNIT, -by.y * PIXELS_PER_UNIT);
     updateView();
 }
 
 void Scene::setCameraPosition(const sf::Vector2f& position) {
-    m_view.setCenter(position);
+    m_view.setCenter(position.x * PIXELS_PER_UNIT, -position.y * PIXELS_PER_UNIT);
     updateView();
 }
 

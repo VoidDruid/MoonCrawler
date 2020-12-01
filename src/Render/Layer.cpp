@@ -17,11 +17,11 @@ inline std::optional<std::weak_ptr<IDrawable>> getDrawable(const DrawablesMap::v
 }
 
 MappedIterator<DrawablesMap, std::reference_wrapper<const sf::Sprite>> Layer::getSpritesIterator() {
-    return MappedIterator<DrawablesMap, std::reference_wrapper<const sf::Sprite>>(m_objectsMap, getSprite);
+    return MappedIterator<DrawablesMap, std::reference_wrapper<const sf::Sprite>>(m_objectsMap, getSprite, true);
 }
 
 MappedIterator<DrawablesMap, std::weak_ptr<IDrawable>> Layer::getDrawablesIterator() {
-    return MappedIterator<DrawablesMap, std::weak_ptr<IDrawable>>(m_objectsMap, getDrawable);
+    return MappedIterator<DrawablesMap, std::weak_ptr<IDrawable>>(m_objectsMap, getDrawable, true);
 }
 
 void Layer::removeObject(GID id) {

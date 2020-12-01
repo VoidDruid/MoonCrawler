@@ -10,20 +10,9 @@ using namespace MoonCrawler;
 #define DEBUGGING_RENDER
 #ifdef DEBUGGING_RENDER
 #include "Render/Canvas.h"
-#include "Render/Resources/Texture.h"
 #include "Game/Scene.h"
-#include <Game/StaticEntity.h>
-#include <Game/MainHeroIOSystem.h>
-
-struct Mover : public System {
-    void operator()(std::shared_ptr<Scene> scene, std::shared_ptr<EntityBase> entity, Components& components) override {
-        Position& position = components.get<Position>(entity->ID);
-        position.x += 1;
-    }
-    unsigned char getNeededComponents() override {
-        return hasPosition;
-    }
-};
+#include "Game/MainHeroIOSystem.h"
+#include "Game/Subsystems/Entities.h"
 #endif
 
 void initManagers(const std::shared_ptr<MainWindow>& mainWindow) {
@@ -49,20 +38,13 @@ int main(int argc, char **argv) try
 
 #ifdef DEBUGGING_RENDER
     auto scene = createScene(mainWindow->getGameCanvas());
-    auto staticEntityPtr = std::make_shared<StaticEntity>();
-    auto texture = scene->getCanvas()->getResource<Texture>("test.png");
+    scene->populate("map.json");
 
-    staticEntityPtr->initialize(texture, sf::Vector2i(100, 100));
-    staticEntityPtr->setPosition(sf::Vector2f(0, 0));
-
-    auto id = scene->addObject<StaticEntity>(staticEntityPtr);
-    scene->addComponent(id, Position{0, 0});
     scene->addSystem<MainHeroIOSystem>();
-    scene->moveCamera(sf::Vector2f(0, 300));
+    createPlayer(scene, Transform{0, 0, 7, 7});
+    scene->moveCamera(sf::Vector2f(0, 0));
 
     scene->start();
-
-    qDebug() << id;
 #endif
 
     auto retVal = QApplication::exec();

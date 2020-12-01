@@ -1,36 +1,37 @@
 #include "MainHeroIOSystem.h"
 
 #include "Scene.h"
-
-#include <iostream>
+#include "Subsystems/Collisions.h"
 
 void
 MoonCrawler::MainHeroIOSystem::operator()(std::shared_ptr<Scene> scene, std::shared_ptr<EntityBase> entity, MoonCrawler::Components &components) {
     if(not entity->isKeyboardPlayable()) {
         return;
     }
+
+    auto& transform = components.get<Transform>(entity->ID);
+
+    sf::Vector2f lastPosition = transform.position;  // copying last position
+
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
     {
-        auto& pos = components.positions[entity->ID];
-        pos.x--;
-        std::cout <<"position: " << pos.x << " " << pos.y << std::endl;
+        transform.position.x--;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
     {
-        auto& pos = components.positions[entity->ID];
-        pos.x++;
-        std::cout <<"position: " << pos.x << " " << pos.y << std::endl;
+        transform.position.x++;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
     {
-        auto& pos = components.positions[entity->ID];
-        pos.y--;
-        std::cout <<"position: " << pos.x << " " << pos.y << std::endl;
+        transform.position.y++;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
     {
-        auto& pos = components.positions[entity->ID];
-        pos.y++;
-        std::cout <<"position: " << pos.x << " " << pos.y << std::endl;
+        transform.position.y--;
+    }
+
+    auto collisions = getCollisions(scene, entity, components);
+    if (!collisions.first->empty()) {
+        transform.position = lastPosition;
     }
 }
