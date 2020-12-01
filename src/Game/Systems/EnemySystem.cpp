@@ -35,6 +35,6 @@ MoonCrawler::EnemySystem::operator()(std::shared_ptr<Scene> scene, std::shared_p
         meleeAttack._lastStrikeMicros = elapsedTime;
         auto& playerHealth = components.get<Health>(player->ID);
         playerHealth.current -= meleeAttack.damage;
-        qDebug() << playerHealth.current;
+        qDebug() << "PLAYER HEALTH" << playerHealth.current;
     }
 }

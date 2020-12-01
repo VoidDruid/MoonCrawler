@@ -66,3 +66,7 @@ sf::Int64 Canvas::getElapsedMicros() {
 sf::Int64 Canvas::getDeltaMicros() {
     return getElapsedMicros() - m_lastFrameTimeMicros;
 }
+
+void Canvas::removeObject(GID objectId) {
+    m_layers[0].removeObject(objectId);
+}

@@ -26,7 +26,6 @@ void Scene::populate(const std::string& layoutName) {
         createStaticObject(
                 shared_from_this(),
                 Transform(sf::Vector2f{(i * 64.0f), (j*64.0f)}, {64, 64}),
-                Collider{false},
                 "floor.png");
         }
     }

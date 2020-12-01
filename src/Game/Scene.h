@@ -26,6 +26,11 @@ public:
         return object->ID;
     }
 
+    void removeObject(GID entityId) {
+        m_ecsManager->removeEntity(entityId);
+        m_canvas->removeObject(entityId);
+    }
+
     template <typename T, typename ...Args>
     void addSystem(Args... args) {
         static_assert(std::is_base_of<System, T>::value, "Should be a derivative of System");
@@ -71,6 +76,8 @@ public:
     std::shared_ptr<EntityBase> getPlayer();
 
     void setPlayer(const std::shared_ptr<EntityBase>& player);
+
+    sf::Vector2f getMousePosition();
 private:
     std::shared_ptr<ECSManager> m_ecsManager;
 

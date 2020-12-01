@@ -14,8 +14,8 @@ using namespace MoonCrawler;
 
 #include "Game/Systems/MainHeroIOSystem.h"
 #include "Game/Systems/EnemySystem.h"
-#include <Game/Systems/GameSynchronizerSystem.h>
-
+#include "Game/Systems/GameSynchronizerSystem.h"
+#include "Game/Systems/HealthSystem.h"
 #include "Game/Systems/Subsystems/Entities.h"
 #endif
 
@@ -49,6 +49,7 @@ int main(int argc, char **argv) try
     scene->addSystem<MainHeroIOSystem>();
     scene->addSystem<GameSynchronizerSystem>();
     scene->addSystem<EnemySystem>();
+    scene->addSystem<HealthSystem>();
 
     scene->moveCamera(sf::Vector2f(0, 0));
 

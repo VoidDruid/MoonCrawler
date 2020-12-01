@@ -66,6 +66,11 @@ void Scene::setPlayer(const std::shared_ptr<EntityBase>& player) {
     m_player = player;
 }
 
+sf::Vector2f Scene::getMousePosition() {
+    sf::Vector2i pixelPos = sf::Mouse::getPosition(*m_canvas);
+    return m_canvas->mapPixelToCoords(pixelPos) / PIXELS_PER_UNIT;
+}
+
 namespace MoonCrawler {
     static std::shared_ptr<Scene> _currentScene = nullptr;
 

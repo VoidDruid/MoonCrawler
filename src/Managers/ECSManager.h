@@ -109,6 +109,8 @@ private:
 
     std::unordered_map<GID, std::shared_ptr<EntityBase>> m_Entities{};
 
+    std::vector<GID> m_toDelete{};
+
     std::thread ecsThread;
 
     static constexpr int m_milSecsLoopPause = MILSECS_PER_FRAME_60;

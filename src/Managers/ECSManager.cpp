@@ -9,6 +9,10 @@ void ECSManager::start() {
     auto ecsLoop = [weakSelf]() {
         auto scenePtr = getCurrentScene();
         while(auto strongSelf = weakSelf.lock()) {
+            for (GID toDelete : strongSelf->m_toDelete) {
+                strongSelf->m_Entities.erase(toDelete);
+            }
+            strongSelf->m_toDelete.clear();
             for(auto& [_, entity] : strongSelf->m_Entities) {
                 for (auto& system : strongSelf->m_Systems) {
                     unsigned char neededComponentsFlag = system->getNeededComponents();
@@ -27,12 +31,12 @@ void ECSManager::start() {
 
 void ECSManager::removeEntity(GID entityId) {
     std::lock_guard<std::mutex> lock{entityMutex};
-    m_Entities.erase(entityId);
+    m_toDelete.push_back(entityId);
 }
 
 void ECSManager::removeEntity(const std::shared_ptr<EntityBase>& entity) {
     std::lock_guard<std::mutex> lock{entityMutex};
-    m_Entities.erase(entity->ID);
+    m_toDelete.push_back(entity->ID);
 }
 
 void ECSManager::addEntity(const std::shared_ptr<EntityBase>& entity) {

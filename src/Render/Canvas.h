@@ -28,6 +28,8 @@ public :
         return m_layers[0].addObject<T>(object);
     }
 
+    void removeObject(GID objectId);
+
     void start();
 
     void stop();

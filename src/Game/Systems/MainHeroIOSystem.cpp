@@ -34,4 +34,9 @@ MoonCrawler::MainHeroIOSystem::operator()(std::shared_ptr<Scene> scene, std::sha
     if (!collisions.first->empty()) {
         transform.position = lastPosition;
     }
+
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+        auto clickedPosition = scene->getMousePosition();
+        qDebug() << clickedPosition.x << clickedPosition.y;
+    }
 }
