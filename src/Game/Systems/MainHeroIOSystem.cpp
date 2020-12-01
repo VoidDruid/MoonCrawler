@@ -1,6 +1,6 @@
 #include "MainHeroIOSystem.h"
 
-#include "Scene.h"
+#include "Game/Scene.h"
 #include "Subsystems/Collisions.h"
 
 void

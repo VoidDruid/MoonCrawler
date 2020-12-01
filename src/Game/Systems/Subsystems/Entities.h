@@ -21,4 +21,9 @@ std::shared_ptr<StaticEntity> createStaticObject(
 std::shared_ptr<StaticEntity> createPlayer(
         const std::shared_ptr<Scene> &scene,
         const Transform &transform);
+
+std::shared_ptr<StaticEntity> createEnemy(
+        const std::shared_ptr<Scene> &scene,
+        const Transform &transform);
+
 }

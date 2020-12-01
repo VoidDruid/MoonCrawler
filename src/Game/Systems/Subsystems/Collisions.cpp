@@ -3,15 +3,6 @@
 
 namespace MoonCrawler {
 
-inline sf::Rect<float> toRect(const Transform& transform) {
-    return sf::Rect<float>{
-        transform.position.x - transform.size.x / 2,
-        transform.position.y - transform.size.y / 2,
-        float(transform.size.x),
-        float(transform.size.y),
-    };
-}
-
 std::pair<collisionsVector, collisionsVector> getCollisions(
         const std::shared_ptr<Scene>& scene,
         const std::shared_ptr<EntityBase>& entity,

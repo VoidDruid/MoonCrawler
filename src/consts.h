@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SFML/Graphics.hpp"
+#include <cmath>
 
 namespace MoonCrawler {
 constexpr int PIXELS_PER_UNIT = 10;
@@ -31,5 +32,8 @@ sf::Vector2<T> operator/ (V m, const sf::Vector2<T>& vec) {
     return std::move(sf::Vector2<T>{vec.x / m, vec.y / m});
 }
 
-
+template<typename T>
+float length(const sf::Vector2<T>& vec) {
+    return std::sqrt(vec.x*vec.x + vec.y*vec.y);
+}
 }

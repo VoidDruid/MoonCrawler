@@ -65,6 +65,10 @@ public:
     MappedIterator<std::unordered_map<GID, std::shared_ptr<EntityBase>>, GID> getFitting() {
         return m_ecsManager->getFitting<T...>();
     }
+
+    std::shared_ptr<EntityBase> getPlayer();
+
+    void setPlayer(const std::shared_ptr<EntityBase>& player);
 private:
     std::shared_ptr<ECSManager> m_ecsManager;
 
@@ -77,6 +81,8 @@ private:
     bool m_isPopulated{false};
 
     inline void updateView();
+
+    std::shared_ptr<EntityBase> m_player{nullptr};
 };
 
 std::shared_ptr<Scene> getCurrentScene();

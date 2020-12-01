@@ -1,6 +1,25 @@
 #include "Entities.h"
 
 namespace MoonCrawler {
+void Scene::populate(const std::string& layoutName) {
+    if (m_isPopulated) {
+        return;  // error?
+    }
+    m_isPopulated = true;
+
+    auto layoutPtr = getResource<Layout>(layoutName);
+
+    for (auto& wall : layoutPtr->walls) {
+        float adjustedX = wall.position.x + wall.size.x / 2;
+        float adjustedY = wall.position.y + wall.size.y / 2;
+        createStaticObject(
+                shared_from_this(),
+                Transform(sf::Vector2f{adjustedX, adjustedY}, wall.size),
+                Collider{true},
+                "wall.png");
+    }
+}
+
 std::shared_ptr<StaticEntity> createStaticObject(
         const std::shared_ptr<Scene> &scene,
         const Transform &transform,
@@ -34,27 +53,23 @@ std::shared_ptr<StaticEntity> createPlayer(
     auto entityPtr = createStaticObject(scene, transform, TEST_TEXTURE_NAME);
 
     scene->addComponent(entityPtr->ID, Health{});
+    scene->addComponent(entityPtr->ID, RangedAttack{});
     entityPtr->isKeyboardPlayableV = true;
+
+    scene->setPlayer(entityPtr);
 
     return entityPtr;
 }
 
-void Scene::populate(const std::string& layoutName) {
-    if (m_isPopulated) {
-        return;  // error?
-    }
-    m_isPopulated = true;
+std::shared_ptr<StaticEntity> createEnemy(
+        const std::shared_ptr<Scene> &scene,
+        const Transform &transform) {
+    auto entityPtr = createStaticObject(scene, transform, "test.png");
 
-    auto layoutPtr = getResource<Layout>(layoutName);
+    scene->addComponent(entityPtr->ID, Health{});
+    scene->addComponent(entityPtr->ID, EnemyTrait{});
+    scene->addComponent(entityPtr->ID, MeleeAttack{});
 
-    for (auto& wall : layoutPtr->walls) {
-        float adjustedX = wall.position.x + wall.size.x / 2;
-        float adjustedY = wall.position.y + wall.size.y / 2;
-        createStaticObject(
-            shared_from_this(),
-            Transform(sf::Vector2f{adjustedX, adjustedY}, wall.size),
-            Collider{true},
-            "wall.png");
-    }
+    return entityPtr;
 }
 }

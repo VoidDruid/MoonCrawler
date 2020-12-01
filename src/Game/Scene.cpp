@@ -52,6 +52,14 @@ inline void Scene::updateView() {
     m_canvas->setView(m_view);
 }
 
+std::shared_ptr<EntityBase> Scene::getPlayer() {
+    return m_player;
+}
+
+void Scene::setPlayer(const std::shared_ptr<EntityBase>& player) {
+    m_player = player;
+}
+
 namespace MoonCrawler {
     static std::shared_ptr<Scene> _currentScene = nullptr;
 

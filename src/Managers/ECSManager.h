@@ -55,6 +55,8 @@ public:
     __RegisterMethods__(Collider);
     __RegisterMethods__(Health);
     __RegisterMethods__(EnemyTrait);
+    __RegisterMethods__(MeleeAttack);
+    __RegisterMethods__(RangedAttack);
 
     template<typename SystemT, typename ...Args>
     void addSystem(Args... args) {

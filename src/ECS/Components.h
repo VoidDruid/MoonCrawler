@@ -2,6 +2,7 @@
 
 #include <unordered_map>
 
+#include "SFML/System.hpp"
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/System/Vector2.hpp>
 
@@ -27,7 +28,7 @@ template<> inline void add<T>(GID id, const T& component) {             \
     T##Store[id] = std::move(component);                                \
 }                                                                       \
 
-__ComponentDef__(Transform, 0x01) {  // TODO: automate (in macro) flag increment
+__ComponentDef__(Transform, 1 << 0) {  // TODO: automate (in macro) flag increment
     sf::Vector2f position;
     sf::Vector2i size;
 
@@ -37,17 +38,37 @@ __ComponentDef__(Transform, 0x01) {  // TODO: automate (in macro) flag increment
     Transform(float x, float y, int width, int height) : position{x, y}, size{width, height} {};
 };
 
-__ComponentDef__(Collider, 0x02) {
+__ComponentDef__(Collider, 1 << 1) {
     bool isBlocking{false};
 };
 
-__ComponentDef__(EnemyTrait, 0x04) {
+__ComponentDef__(EnemyTrait, 1 << 2) {};
+
+__ComponentDef__(MeleeAttack, 1 << 3) {
+    int damage{10};
+    float rechargeTimeSecs{1};
+    sf::Int64 _lastStrikeMicros{0};
 };
 
-__ComponentDef__(Health, 0x08) {
+__ComponentDef__(RangedAttack, 1 << 4) {
+    int damage{5};
+    float rechargeTimeSecs{1};
+    sf::Int64 _lastStrikeMicros{0};
+};
+
+__ComponentDef__(Health, 1 << 5) {
     int max{100};
     int current{100};
 };
+
+inline sf::Rect<float> toRect(const Transform& transform) {
+    return sf::Rect<float>{
+        transform.position.x - transform.size.x / 2,
+        transform.position.y - transform.size.y / 2,
+        float(transform.size.x),
+        float(transform.size.y),
+    };
+}
 
 struct Components
 {
@@ -59,7 +80,9 @@ struct Components
     __RegisterComponent__(Collider);
     __RegisterComponent__(EnemyTrait);
     __RegisterComponent__(Health);
+    __RegisterComponent__(MeleeAttack);
+    __RegisterComponent__(RangedAttack);
 };
 
-#define COMPONENTS Transform, Collider, EnemyTrait, Health
+#define COMPONENTS Transform, Collider, EnemyTrait, Health, MeleeAttack, RangedAttack
 }
