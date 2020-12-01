@@ -31,10 +31,11 @@ void Scene::start() {
         return;
     }
     m_canvas->start();
+    m_ecsManager->start();
 }
 
 void Scene::startECSManager() {
-    m_ecsManager->start();
+    //m_ecsManager->start();
 }
 sf::Vector2f Scene::getCameraPosition() {
     auto& center = m_view.getCenter();

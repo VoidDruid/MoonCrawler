@@ -53,11 +53,25 @@ if(entity->has<ComponentT>()) {                            \
 
 void ECSManager::updateEntity(const std::shared_ptr<EntityBase> &entity) {
     std::lock_guard<std::mutex> lock{entityMutex};
-    m_Entities[entity->ID] = entity;
+    //m_Entities[entity->ID] = entity;
 
-    UPDATE_COMPONENT(Collider);
-    UPDATE_COMPONENT(Health);
-    UPDATE_COMPONENT(EnemyTrait);
-    UPDATE_COMPONENT(Transform);
+    //UPDATE_COMPONENT(Collider);
+    //UPDATE_COMPONENT(Health);
+   // UPDATE_COMPONENT(EnemyTrait);
+   // UPDATE_COMPONENT(Transform);
+
+    if(entity->has<Collider>()) {
+        m_components->add<Collider>(entity->ID, entity->m_components->get<Collider>(entity->ID));
+    }
+    if(entity->has<Health>()) {
+        m_components->add<Health>(entity->ID, entity->m_components->get<Health>(entity->ID));
+    }
+    if(entity->has<EnemyTrait>()) {
+        m_components->add<EnemyTrait>(entity->ID, entity->m_components->get<EnemyTrait>(entity->ID));
+    }
+    if(entity->has<Transform>()) {
+        m_components->add<Transform>(entity->ID, entity->m_components->get<Transform>(entity->ID));
+    }
+    entity->m_components = m_components;
 }
 }

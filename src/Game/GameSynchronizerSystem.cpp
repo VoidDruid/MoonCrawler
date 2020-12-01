@@ -4,6 +4,8 @@
 #include "GameSynchronizerSystem.h"
 #include "Managers/NetworkManager.h"
 #include "Managers/GameManager.h"
+#include "Game/Subsystems/Entities.h"
+
 #include <iostream>
 
 void MoonCrawler::GameSynchronizerSystem::operator()(std::shared_ptr<Scene> scene, std::shared_ptr<EntityBase> entity,
@@ -22,24 +24,10 @@ void MoonCrawler::GameSynchronizerSystem::operator()(std::shared_ptr<Scene> scen
 
     //if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
     //{
-        //std::cout << "Current Entity with ID = " << entity->ID << std::endl;
     auto& position = components.get<Transform>(entity->ID);
-    /*nlohmann::json js;
-    to_json(js, position);
-    std::cout << js << std::endl;
-
-    Position pos{};
-    from_json(js, pos);
-    std::cout << pos.x << " " << pos.y << std::endl;*/
-
         nlohmann::json js;
         to_json(js, *entity);
-        //std::cout << "Entity: " << js << std::endl;
 
-        /*EntityBase ent{};
-        from_json(js, ent);
-        to_json(js, ent);
-        std::cout << "from_json: " <<js << std::endl;*/
         auto networkManager = getNetworkManager();
         js["gameState"] = "inGame";
         Event event{
@@ -48,19 +36,20 @@ void MoonCrawler::GameSynchronizerSystem::operator()(std::shared_ptr<Scene> scen
                 EventStatus::New
         };
         networkManager->sendEvent(event);
-    //}
+   // }
 }
 
 void MoonCrawler::GameSynchronizerSystem::onEvent(MoonCrawler::Event &event) {
     auto data= *event.getData();
     if((data["gameState"] == "inGame") && (data["isRemote"] == true) && (event.getEventStatus() == EventStatus::New)) {
-        EntityBase ent{};
-        from_json(data, ent);
-        to_json(data, ent);
-        std::cout << "Received from NETWORK : " << data << std::endl;
-
-        if(auto strongScene = m_scene.lock()) {
-            strongScene->updateEntity(std::make_shared<EntityBase>(ent));
+        if(data["isDynamic"] == true) {
+            auto ent = std::make_shared<StaticEntity>();
+            from_json(data, *ent);
+            to_json(data, *ent);
+           // std::cout << "Received from NETWORK : " << data << std::endl;
+            if(auto strongScene = m_scene.lock()) {
+                strongScene->updateEntity(ent);
+            }
         }
     }
 }

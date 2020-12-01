@@ -5,7 +5,11 @@
 #include "Managers/GameManager.h"
 void
 MoonCrawler::MainHeroIOSystem::operator()(std::shared_ptr<Scene> scene, std::shared_ptr<EntityBase> entity, MoonCrawler::Components &components) {
-    if(not entity->isKeyboardPlayable and not getGameManager()->isHost()) {
+    if(getGameManager()->isHost()) {
+        return;
+    }
+
+    if(not entity->isKeyboardPlayable) {
         return;
     }
 

@@ -35,6 +35,7 @@ std::shared_ptr<StaticEntity> createPlayer(
 
     scene->addComponent(entityPtr->ID, Health{});
     entityPtr->isKeyboardPlayable = true;
+    entityPtr->isDynamic = true;
 
     return entityPtr;
 }

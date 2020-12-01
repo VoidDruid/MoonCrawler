@@ -18,6 +18,7 @@ struct EntityBase {
 
     bool isKeyboardPlayable{false};
     bool isDrawable{false};
+    bool isDynamic{false};
 
     template<typename T>
     bool has() const {
@@ -44,6 +45,7 @@ inline void to_json(nlohmann::json& j, const EntityBase& e) {
         {"hasComponents", e.hasComponents},
         {"isKeyboardPlayable", e.isKeyboardPlayable},
         {"isDrawable", e.isDrawable},
+        {"isDynamic", e.isDynamic}
     };
     ADD_COMPONENT_TO_JSON(Transform);
     ADD_COMPONENT_TO_JSON(Health);
@@ -56,6 +58,7 @@ inline void from_json(const nlohmann::json& j, EntityBase& e) {
     j.at("hasComponents").get_to(e.hasComponents);
     j.at("isKeyboardPlayable").get_to(e.isKeyboardPlayable);
     j.at("isDrawable").get_to(e.isDrawable);
+    j.at("isDynamic").get_to(e.isDynamic);
 
     if(not e.m_components) {
         e.m_components = std::make_shared<Components>();
