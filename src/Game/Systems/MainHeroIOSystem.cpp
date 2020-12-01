@@ -2,6 +2,7 @@
 
 #include "Game/Scene.h"
 #include "Subsystems/Collisions.h"
+#include "Subsystems/Entities.h"
 
 void
 MoonCrawler::MainHeroIOSystem::operator()(std::shared_ptr<Scene> scene, std::shared_ptr<EntityBase> entity, MoonCrawler::Components &components) {
@@ -35,8 +36,36 @@ MoonCrawler::MainHeroIOSystem::operator()(std::shared_ptr<Scene> scene, std::sha
         transform.position = lastPosition;
     }
 
+    if (not entity->has<RangedAttack>()) {
+        return;
+    }
+
+    auto& rangedAttack = components.get<RangedAttack>(entity->ID);
+    auto elapsedTime = scene->getElapsedMicros();
+
+    if (rangedAttack._lastStrikeMicros + rangedAttack.rechargeTimeSecs * MILSECS_TO_SECS > elapsedTime) {
+        return;
+    }
+
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+        rangedAttack._lastStrikeMicros = elapsedTime;
         auto clickedPosition = scene->getMousePosition();
-        qDebug() << clickedPosition.x << clickedPosition.y;
+        const int shotRadius = 10;
+        Transform shotTransform{
+            sf::Vector2f{clickedPosition.x + shotRadius, -clickedPosition.y + shotRadius},
+            sf::Vector2i{shotRadius*2, shotRadius*2}
+        };
+
+        auto iter = scene->getFitting<Transform, Health, EnemyTrait>();
+        while (iter.hasValue()) {
+            auto GID = iter.next();
+            auto& enemyTransform = components.get<Transform>(GID);
+
+            if (areColliding(enemyTransform, shotTransform)) {
+                auto &enemyHealth = components.get<Health>(GID);
+                enemyHealth.current -= rangedAttack.damage;
+                qDebug() << "ENEMY HEALTH" << enemyHealth.current;
+            }
+        }
     }
 }

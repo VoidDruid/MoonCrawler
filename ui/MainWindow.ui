@@ -37,14 +37,14 @@
      <item>
       <widget class="QPushButton" name="playButton">
        <property name="text">
-        <string>Join as Master</string>
+        <string>Play</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="hostButton">
        <property name="text">
-        <string>Play</string>
+        <string>Join as Master</string>
        </property>
       </widget>
      </item>

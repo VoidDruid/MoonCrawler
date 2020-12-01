@@ -64,7 +64,7 @@ std::shared_ptr<StaticEntity> createPlayer(
     auto entityPtr = createStaticObject(scene, transform, TEST_TEXTURE_NAME);
 
     scene->addComponent(entityPtr->ID, Health{});
-    scene->addComponent(entityPtr->ID, RangedAttack{});
+    scene->addComponent(entityPtr->ID, RangedAttack{30});
     scene->addComponent(entityPtr->ID, PlayerTrait{});
 
     entityPtr->isDynamic = true;
