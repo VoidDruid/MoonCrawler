@@ -16,7 +16,6 @@ struct EntityBase {
     GID ID{NO_ID};
     std::shared_ptr<Components> m_components{};
 
-    bool isKeyboardPlayable{false};
     bool isDrawable{false};
     bool isDynamic{false};
 
@@ -43,7 +42,6 @@ inline void to_json(nlohmann::json& j, const EntityBase& e) {
     j = nlohmann::json{
         {"ID", e.ID},
         {"hasComponents", e.hasComponents},
-        {"isKeyboardPlayable", e.isKeyboardPlayable},
         {"isDrawable", e.isDrawable},
         {"isDynamic", e.isDynamic}
     };
@@ -51,12 +49,14 @@ inline void to_json(nlohmann::json& j, const EntityBase& e) {
     ADD_COMPONENT_TO_JSON(Health);
     ADD_COMPONENT_TO_JSON(Collider);
     ADD_COMPONENT_TO_JSON(EnemyTrait);
+    ADD_COMPONENT_TO_JSON(MeleeAttack);
+    ADD_COMPONENT_TO_JSON(RangedAttack);
+    ADD_COMPONENT_TO_JSON(PlayerTrait);
 }
 
 inline void from_json(const nlohmann::json& j, EntityBase& e) {
     j.at("ID").get_to(e.ID);
     j.at("hasComponents").get_to(e.hasComponents);
-    j.at("isKeyboardPlayable").get_to(e.isKeyboardPlayable);
     j.at("isDrawable").get_to(e.isDrawable);
     j.at("isDynamic").get_to(e.isDynamic);
 
@@ -68,6 +68,9 @@ inline void from_json(const nlohmann::json& j, EntityBase& e) {
     GET_COMPONENT_FROM_JSON(Health);
     GET_COMPONENT_FROM_JSON(Collider);
     GET_COMPONENT_FROM_JSON(EnemyTrait);
+    GET_COMPONENT_FROM_JSON(MeleeAttack);
+    GET_COMPONENT_FROM_JSON(RangedAttack);
+    GET_COMPONENT_FROM_JSON(PlayerTrait);
 }
 
 

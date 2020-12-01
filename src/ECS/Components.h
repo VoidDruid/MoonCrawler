@@ -70,6 +70,8 @@ __ComponentDef__(Health, 1 << 5) {
     int current{100};
 };
 
+__ComponentDef__(PlayerTrait, 1 << 6) {};
+
 struct Components
 {
     template <typename T> inline T& get(GID id);
@@ -82,9 +84,10 @@ struct Components
     __RegisterComponent__(Health);
     __RegisterComponent__(MeleeAttack);
     __RegisterComponent__(RangedAttack);
+    __RegisterComponent__(PlayerTrait);
 };
 
-#define COMPONENTS Transform, Collider, EnemyTrait, Health, MeleeAttack, RangedAttack
+#define COMPONENTS Transform, Collider, EnemyTrait, Health, MeleeAttack, RangedAttack, PlayerTrait
 
 #define TO_JSON_1(COMPONENT, field_1) \
 void to_json(nlohmann::json& j, const COMPONENT& c) { \
@@ -129,6 +132,14 @@ inline void to_json(nlohmann::json& j, const EnemyTrait& c) {
 
 inline void from_json(const nlohmann::json& j, EnemyTrait& c) {
     c = EnemyTrait{};
+}
+
+inline void to_json(nlohmann::json& j, const PlayerTrait& c) {
+    j = nlohmann::json{};
+}
+
+inline void from_json(const nlohmann::json& j, PlayerTrait& c) {
+    c = PlayerTrait{};
 }
 
 inline void to_json(nlohmann::json& j, const MeleeAttack& c) {

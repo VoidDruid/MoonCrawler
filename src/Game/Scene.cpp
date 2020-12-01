@@ -34,9 +34,6 @@ void Scene::start() {
     m_ecsManager->start();
 }
 
-void Scene::startECSManager() {
-    //m_ecsManager->start();
-}
 sf::Vector2f Scene::getCameraPosition() {
     auto& center = m_view.getCenter();
     return sf::Vector2f{center.x / PIXELS_PER_UNIT, -center.y / PIXELS_PER_UNIT};

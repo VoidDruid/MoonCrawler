@@ -8,6 +8,8 @@ constexpr int PIXELS_PER_UNIT = 10;
 
 constexpr int MILSECS_PER_FRAME_60 = 1000 / 150;
 
+constexpr int MILSECS_TO_SECS = 1000000;
+
 const sf::Vector2f UNIT_VECTOR2F = sf::Vector2f(1, 1);
 
 const std::string TEST_TEXTURE_NAME = "test.png";

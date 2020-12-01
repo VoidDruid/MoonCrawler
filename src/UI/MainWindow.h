@@ -25,7 +25,7 @@ private:
 
     Ui::MainWindow *ui;
 
-    bool m_isHost;
+    bool m_isHost{true};
 
     Canvas* m_canvas = nullptr;
 

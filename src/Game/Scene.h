@@ -47,8 +47,6 @@ public:
         return m_canvas->getResource<T>(resourceName);
     }
 
-    void startECSManager();
-
     sf::Int64 getElapsedMicros();
 
     sf::Int64 getDeltaMicros();

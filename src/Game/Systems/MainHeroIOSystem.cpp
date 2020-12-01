@@ -5,7 +5,7 @@
 
 void
 MoonCrawler::MainHeroIOSystem::operator()(std::shared_ptr<Scene> scene, std::shared_ptr<EntityBase> entity, MoonCrawler::Components &components) {
-    if(not entity->isKeyboardPlayable) {
+    if(not entity->has<PlayerTrait>()) {
         return;
     }
 

@@ -58,6 +58,7 @@ public:
     __RegisterMethods__(EnemyTrait);
     __RegisterMethods__(MeleeAttack);
     __RegisterMethods__(RangedAttack);
+    __RegisterMethods__(PlayerTrait);
 
     template<typename SystemT, typename ...Args>
     void addSystem(Args... args) {

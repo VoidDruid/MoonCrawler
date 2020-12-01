@@ -54,8 +54,8 @@ std::shared_ptr<StaticEntity> createPlayer(
 
     scene->addComponent(entityPtr->ID, Health{});
     scene->addComponent(entityPtr->ID, RangedAttack{});
+    scene->addComponent(entityPtr->ID, PlayerTrait{});
 
-    entityPtr->isKeyboardPlayable = true;
     entityPtr->isDynamic = true;
 
     scene->setPlayer(entityPtr);
