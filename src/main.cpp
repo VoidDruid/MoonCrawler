@@ -11,9 +11,12 @@ using namespace MoonCrawler;
 #ifdef DEBUGGING_RENDER
 #include "Render/Canvas.h"
 #include "Game/Scene.h"
+
 #include "Game/Systems/MainHeroIOSystem.h"
-#include "Game/Systems/Subsystems/Entities.h"
 #include "Game/Systems/EnemySystem.h"
+#include <Game/Systems/GameSynchronizerSystem.h>
+
+#include "Game/Systems/Subsystems/Entities.h"
 #endif
 
 void initManagers(const std::shared_ptr<MainWindow>& mainWindow) {
@@ -42,9 +45,12 @@ int main(int argc, char **argv) try
     scene->populate("map.json");
 
     scene->addSystem<MainHeroIOSystem>();
+    scene->addSystem<GameSynchronizerSystem>();
     scene->addSystem<EnemySystem>();
+
     createPlayer(scene, Transform{0, 0, 7, 7});
     createEnemy(scene, {40, 40, 5, 5});
+
     scene->moveCamera(sf::Vector2f(0, 0));
 
     scene->start();

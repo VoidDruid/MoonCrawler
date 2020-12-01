@@ -13,6 +13,8 @@ public:
     void operator=(Scene const &x) = delete;
     Scene(Scene&&) = delete;
 
+    void updateEntity(const std::shared_ptr<EntityBase>& entity);
+
     template<typename T>
     GID addObject(const std::shared_ptr<T>& object) {
         m_ecsManager->addEntity(object);
@@ -44,6 +46,8 @@ public:
     std::shared_ptr<T> getResource(std::string resourceName) {
         return m_canvas->getResource<T>(resourceName);
     }
+
+    void startECSManager();
 
     sf::Int64 getElapsedMicros();
 

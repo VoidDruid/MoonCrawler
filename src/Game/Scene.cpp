@@ -1,5 +1,7 @@
 #include "Scene.h"
 
+#include "Managers/GameManager.h"
+
 using namespace MoonCrawler;
 
 Scene::Scene(Canvas *canvas) :
@@ -8,6 +10,10 @@ Scene::Scene(Canvas *canvas) :
     m_view = sf::View(sf::Vector2f(0,0), m_canvas->getDefaultView().getSize());
     m_canvas->setView(m_view);
     m_ecsManager = std::make_shared<ECSManager>();
+}
+
+void Scene::updateEntity(const std::shared_ptr<EntityBase>& entity) {
+    m_ecsManager->updateEntity(entity);
 }
 
 sf::Int64 Scene::getElapsedMicros() {
@@ -28,6 +34,9 @@ void Scene::start() {
     m_ecsManager->start();
 }
 
+void Scene::startECSManager() {
+    //m_ecsManager->start();
+}
 sf::Vector2f Scene::getCameraPosition() {
     auto& center = m_view.getCenter();
     return sf::Vector2f{center.x / PIXELS_PER_UNIT, -center.y / PIXELS_PER_UNIT};

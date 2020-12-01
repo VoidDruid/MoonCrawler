@@ -54,7 +54,9 @@ std::shared_ptr<StaticEntity> createPlayer(
 
     scene->addComponent(entityPtr->ID, Health{});
     scene->addComponent(entityPtr->ID, RangedAttack{});
-    entityPtr->isKeyboardPlayableV = true;
+
+    entityPtr->isKeyboardPlayable = true;
+    entityPtr->isDynamic = true;
 
     scene->setPlayer(entityPtr);
 
@@ -69,6 +71,8 @@ std::shared_ptr<StaticEntity> createEnemy(
     scene->addComponent(entityPtr->ID, Health{});
     scene->addComponent(entityPtr->ID, EnemyTrait{});
     scene->addComponent(entityPtr->ID, MeleeAttack{});
+
+    entityPtr->isDynamic = true;
 
     return entityPtr;
 }

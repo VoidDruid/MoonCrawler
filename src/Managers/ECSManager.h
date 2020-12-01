@@ -47,6 +47,7 @@ class ECSManager : public std::enable_shared_from_this<ECSManager> {
 public:
     ECSManager();
     void addEntity(const std::shared_ptr<EntityBase>& entity);
+    void updateEntity(const std::shared_ptr<EntityBase>& entity);
     void removeEntity(GID entityId);
     void removeEntity(const std::shared_ptr<EntityBase>& entity);
     void start();

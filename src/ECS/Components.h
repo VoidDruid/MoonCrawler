@@ -1,6 +1,10 @@
 #pragma once
 
 #include <unordered_map>
+#include <nlohmann/json.hpp>
+
+#include <SFML/Graphics/Rect.hpp>
+#include <SFML/System/Vector2.hpp>
 
 #include "SFML/System.hpp"
 #include <SFML/Graphics/Rect.hpp>
@@ -38,6 +42,15 @@ __ComponentDef__(Transform, 1 << 0) {  // TODO: automate (in macro) flag increme
     Transform(float x, float y, int width, int height) : position{x, y}, size{width, height} {};
 };
 
+inline sf::Rect<float> toRect(const Transform& transform) {
+    return sf::Rect<float>{
+            transform.position.x - transform.size.x / 2,
+            transform.position.y - transform.size.y / 2,
+            float(transform.size.x),
+            float(transform.size.y),
+    };
+}
+
 __ComponentDef__(Collider, 1 << 1) {
     bool isBlocking{false};
 };
@@ -50,25 +63,12 @@ __ComponentDef__(MeleeAttack, 1 << 3) {
     sf::Int64 _lastStrikeMicros{0};
 };
 
-__ComponentDef__(RangedAttack, 1 << 4) {
-    int damage{5};
-    float rechargeTimeSecs{1};
-    sf::Int64 _lastStrikeMicros{0};
-};
+__ComponentDef__(RangedAttack, 1 << 4) : public MeleeAttack {};
 
 __ComponentDef__(Health, 1 << 5) {
     int max{100};
     int current{100};
 };
-
-inline sf::Rect<float> toRect(const Transform& transform) {
-    return sf::Rect<float>{
-        transform.position.x - transform.size.x / 2,
-        transform.position.y - transform.size.y / 2,
-        float(transform.size.x),
-        float(transform.size.y),
-    };
-}
 
 struct Components
 {
@@ -85,4 +85,68 @@ struct Components
 };
 
 #define COMPONENTS Transform, Collider, EnemyTrait, Health, MeleeAttack, RangedAttack
+
+#define TO_JSON_1(COMPONENT, field_1) \
+void to_json(nlohmann::json& j, const COMPONENT& c) { \
+    j = nlohmann::json{{#field_1, c.field_1}}; \
+}
+
+#define TO_JSON_2(COMPONENT, field_1, field_2) \
+void to_json(nlohmann::json& j, const COMPONENT& c) { \
+    j = nlohmann::json{{#field_1, c.field_1}, {#field_2, c.field_2}}; \
+}
+
+#define FROM_JSON_1(COMPONENT, field_1) \
+void from_json(const nlohmann::json& j, COMPONENT& c) { \
+    j.at(#field_1).get_to(c.field_1);\
+}
+
+#define FROM_JSON_2(COMPONENT, field_1, field_2) \
+void from_json(const nlohmann::json& j, COMPONENT& c) { \
+    j.at(#field_1).get_to(c.field_1);\
+    j.at(#field_2).get_to(c.field_2);\
+}
+
+inline void to_json(nlohmann::json& j, const Transform& c) {
+    j = nlohmann::json{
+        {"x", c.size.x},
+        {"y", c.size.y},
+        {"width", c.position.x},
+        {"height", c.position.y},
+    };
+}
+
+inline void from_json(const nlohmann::json& j, Transform& c) {
+    j.at("x").get_to(c.size.x);
+    j.at("y").get_to(c.size.y);
+    j.at("width").get_to(c.position.x);
+    j.at("height").get_to(c.position.y);
+}
+
+inline void to_json(nlohmann::json& j, const EnemyTrait& c) {
+    j = nlohmann::json{};
+}
+
+inline void from_json(const nlohmann::json& j, EnemyTrait& c) {
+    c = EnemyTrait{};
+}
+
+inline void to_json(nlohmann::json& j, const MeleeAttack& c) {
+    j = nlohmann::json{
+        {"damage", c.damage},
+        {"rechargeTimeSecs", c.rechargeTimeSecs},
+        {"_lastStrikeMicros", c._lastStrikeMicros},
+    };
+}
+
+inline void from_json(const nlohmann::json& j, MeleeAttack& c) {
+    j.at("damage").get_to(c.damage);
+    j.at("rechargeTimeSecs").get_to(c.rechargeTimeSecs);
+    j.at("_lastStrikeMicros").get_to(c._lastStrikeMicros);
+}
+
+inline TO_JSON_1(Collider, isBlocking);
+inline FROM_JSON_1(Collider, isBlocking);
+inline TO_JSON_2(Health, max, current);
+inline FROM_JSON_2(Health, max, current);
 }
