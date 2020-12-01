@@ -146,6 +146,6 @@ bool NetworkLinuxPAL::isConnected() const {
 }
 
 void NetworkLinuxPAL::shutdown() {
-    std::lock_guard<std::mutex> lock(m_shutdownMutex);
+
     m_isRunning = false;
 }

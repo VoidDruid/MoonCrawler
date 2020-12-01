@@ -18,6 +18,18 @@ void Scene::populate(const std::string& layoutName) {
                 Collider{true},
                 "wall.png");
     }
+
+    //create floor
+
+    for(int i =-1 ;i < 3; i++) {
+        for(int j=-1 ;j < 3; j++){
+        createStaticObject(
+                shared_from_this(),
+                Transform(sf::Vector2f{(i * 64.0f), (j*64.0f)}, {64, 64}),
+                Collider{false},
+                "floor.png");
+        }
+    }
 }
 
 std::shared_ptr<StaticEntity> createStaticObject(

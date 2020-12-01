@@ -42,14 +42,13 @@ int main(int argc, char **argv) try
 
 #ifdef DEBUGGING_RENDER
     auto scene = createScene(mainWindow->getGameCanvas());
+    createPlayer(scene, Transform{0, 0, 7, 7});
+    createEnemy(scene, {40, 40, 5, 5});
     scene->populate("map.json");
 
     scene->addSystem<MainHeroIOSystem>();
     scene->addSystem<GameSynchronizerSystem>();
     scene->addSystem<EnemySystem>();
-
-    createPlayer(scene, Transform{0, 0, 7, 7});
-    createEnemy(scene, {40, 40, 5, 5});
 
     scene->moveCamera(sf::Vector2f(0, 0));
 
